@@ -36,7 +36,16 @@ function contrast(a, b) {
   const l1 = luminance(a), l2 = luminance(b);
   return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
 }
-const rgb = s => { const m = s && s.match(/rgba?\(([^)]+)\)/); if (!m) return null; const v = m[1].split(',').map(Number); return [v[0], v[1], v[2]]; };
+/** Parse a colour, compositing any alpha over the colour behind it, because
+ *  a translucent button over white is not the colour its rgba() says. */
+const rgb = (s, behind) => {
+  const m = s && s.match(/rgba?\(([^)]+)\)/);
+  if (!m) return null;
+  const v = m[1].split(',').map(Number);
+  const a = v.length > 3 ? v[3] : 1;
+  if (a >= 1 || !behind) return [v[0], v[1], v[2]];
+  return [0, 1, 2].map(i => Math.round(v[i] * a + behind[i] * (1 - a)));
+};
 
 (async () => {
   const browser = await chromium.launch({
@@ -101,12 +110,22 @@ const rgb = s => { const m = s && s.match(/rgba?\(([^)]+)\)/); if (!m) return nu
         const cs = getComputedStyle(el);
         let bg = cs.backgroundColor, n = el;
         while (n && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) { n = n.parentElement; if (!n) break; bg = getComputedStyle(n).backgroundColor; }
-        out.push({ label: (el.textContent || '').trim().slice(0, 14), fg: cs.color, bg });
+          // The colour painted behind this element, so a translucent
+        // background can be composited rather than taken at face value.
+        let behind = 'rgb(255, 255, 255)', up = el.parentElement;
+        while (up) {
+          const c = getComputedStyle(up).backgroundColor;
+          if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent' && !/,\s*0(\.\d+)?\)$/.test(c)) { behind = c; break; }
+          up = up.parentElement;
+        }
+        out.push({ label: (el.textContent || '').trim().slice(0, 14), fg: cs.color, bg, behind });
       });
       return out;
     });
     for (const x of found) {
-      const fg = rgb(x.fg), bg = rgb(x.bg);
+      const behind = rgb(x.behind) || [255, 255, 255];
+      const bg = rgb(x.bg, behind);
+      const fg = rgb(x.fg, bg);
       if (!fg || !bg) continue;
       measured++;
       const ratio = contrast(fg, bg);

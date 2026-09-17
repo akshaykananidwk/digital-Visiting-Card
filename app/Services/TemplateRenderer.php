@@ -33,6 +33,7 @@ final class TemplateRenderer
         'bold'      => 'Bold blocks',
         'wave'      => 'Wave sections',
         'stack'     => 'Stacked cards',
+        'rail'      => 'Side contact rail',
     ];
 
     /** @var array<string,mixed> */

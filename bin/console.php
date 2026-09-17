@@ -8,7 +8,7 @@ declare(strict_types=1);
  *   php bin/console.php install --db-name=... --admin-email=...
  *   php bin/console.php migrate
  *   php bin/console.php seed
- *   php bin/console.php templates:generate [--per-category=24]
+ *   php bin/console.php templates:generate [--per-category=24] [--refresh]
  *   php bin/console.php subscriptions:expire
  *   php bin/console.php health
  *   php bin/console.php backup
@@ -172,10 +172,19 @@ try {
 
         case 'templates:generate':
             $perCategory = (int) ($options['per-category'] ?? 24);
+            // --refresh rewrites the built-in designs in place, keeping ids so
+            // cards already using them keep working.
+            $refresh = isset($options['refresh']);
             $result = (new TemplateFactory())->generate($perCategory, static function (int $count) use ($out): void {
                 $out('  … ' . $count . ' designs');
-            });
-            $out(sprintf('Created %d, skipped %d, total %d.', $result['created'], $result['skipped'], $result['total']), 'ok');
+            }, $refresh);
+            $out(sprintf(
+                'Created %d, updated %d, skipped %d, total %d.',
+                $result['created'],
+                $result['updated'],
+                $result['skipped'],
+                $result['total']
+            ), 'ok');
             break;
 
         case 'subscriptions:expire':

@@ -296,6 +296,27 @@ own route table, signs in as each role, skips any page it did not actually
 reach, and fails on a page that scrolls sideways or on a control too narrow
 to use.
 
+### Twelve layouts, five structures
+
+The catalogue advertised twelve layouts across 1,200 designs, but seven of the
+twelve partials were byte-for-byte identical markup and the rest differed by a
+wrapper element, so there were five real structures. Worse, the generator
+picked a layout with `intdiv($index, count($palettes))`, which in a category
+with a dozen palettes never reached past the first two entries of its pool.
+Twenty-four designs in a category were largely one structure recoloured, which
+is exactly how it looked.
+
+Each layout now emits its own markup and there are thirteen, including a rail
+that puts contact beside the identity rather than under it. Contact itself is
+an arrangement a design chooses -- tile grid, stacked list, scrolling row,
+side rail or large blocks -- so designs differ in shape, not only colour. The
+layout pool per category was widened from three to six and the index now
+cycles per design; all thirteen layouts appear in the catalogue.
+
+Refreshing the built-in designs is `templates:generate --refresh`, which
+rewrites them in place and keeps their ids, so a card already using a design
+picks up the improvement rather than losing its template.
+
 ### Button labels that could not be read
 
 Measured across a sample of designs: 196 action buttons fell below 4.5:1,
@@ -307,6 +328,21 @@ derived: the brand hue is shifted until it clears the ratio on the card
 surface, and a filled button's label is whichever of light or dark actually
 reads. That removed every failure except the WhatsApp button, which keeps the
 vendor's own brand green and is excluded deliberately.
+
+Two further cases came out of the new layouts. The bold and glass layouts
+restyled every action button with a translucent tint, including Call and
+WhatsApp, which carry white labels on a solid fill -- leaving white text on a
+near-white button. Those overrides now skip the two branded buttons. And the
+hero layout paints the identity over the cover, where the card's own text
+colours do not apply: a dark navy heading chosen against a white surface
+disappears on a deep blue cover. That overlay carries its own scrim and light
+type.
+
+The contrast check itself was wrong in the same direction: it read `rgba()`
+values at face value instead of compositing them over what was behind, so a
+translucent button was scored against a colour that is never painted. It now
+composites alpha, which is what turned the bold layout's buttons from a
+plausible-looking number into the failure they were.
 
 ## Known limitation
 

@@ -1,50 +1,57 @@
 <?php
 /**
- * Primary thumb-friendly call-to-action grid.
+ * Primary calls to action.
+ *
+ * The same links in one of several arrangements, so a design can present
+ * contact as a tile grid, a stacked list, a single scrolling row, a narrow
+ * side rail or large blocks. The links themselves never change: whichever
+ * arrangement a design picks, a visitor gets the same actions.
  *
  * @var App\Services\CardPresenter $card
+ * @var string|null $variant  grid | list | row | rail | tiles
  */
+$variant = in_array($variant ?? 'grid', ['grid', 'list', 'row', 'rail', 'tiles'], true) ? ($variant ?? 'grid') : 'grid';
+
 $tel = $card->telLink();
 $whatsapp = $card->whatsappLink();
 $directions = $card->directionsLink();
 $email = $card->emailLink();
-$vcardUrl = url('card/' . $card->card()['slug'] . '/vcard');
+$vcardUrl = url_path('card/' . $card->card()['slug'] . '/vcard');
+
+/** @var array<int,array{key:string,class:string,href:?string,icon:string,label:string,external:bool}> $items */
+$items = [];
+if ($tel !== null) {
+    $items[] = ['key' => 'call', 'class' => 'primary', 'href' => $tel, 'icon' => 'phone', 'label' => 'Call now', 'external' => false];
+}
+if ($whatsapp !== null) {
+    $items[] = ['key' => 'whatsapp', 'class' => 'whatsapp', 'href' => $whatsapp, 'icon' => 'whatsapp', 'label' => 'WhatsApp', 'external' => true];
+}
+if ((bool) $card->setting('vcard_enabled', true)) {
+    $items[] = ['key' => 'save_contact', 'class' => '', 'href' => $vcardUrl, 'icon' => 'user-plus', 'label' => 'Save contact', 'external' => false];
+}
+if ($directions !== null) {
+    $items[] = ['key' => 'directions', 'class' => '', 'href' => $directions, 'icon' => 'navigation', 'label' => 'Directions', 'external' => true];
+}
+if ($email !== null) {
+    $items[] = ['key' => 'email', 'class' => '', 'href' => $email, 'icon' => 'mail', 'label' => 'Email', 'external' => false];
+}
+
+$iconSize = $variant === 'list' || $variant === 'rail' ? 20 : ($variant === 'tiles' ? 28 : 23);
 ?>
-<div class="dvc-actions">
-    <?php if ($tel !== null): ?>
-        <a class="dvc-action primary" href="<?= e($tel) ?>" data-track="call" data-track-label="action_grid">
-            <?= icon('phone', 23) ?><span>Call now</span>
+<div class="dvc-actions dvc-actions-<?= e($variant) ?>">
+    <?php foreach ($items as $item): ?>
+        <a class="dvc-action <?= e($item['class']) ?>" href="<?= e((string) $item['href']) ?>"
+           <?= $item['external'] ? 'target="_blank" rel="noopener"' : '' ?>
+           data-track="<?= e($item['key']) ?>" data-track-label="action_<?= e($variant) ?>">
+            <?= icon($item['icon'], $iconSize) ?><span><?= e($item['label']) ?></span>
         </a>
-    <?php endif; ?>
-
-    <?php if ($whatsapp !== null): ?>
-        <a class="dvc-action whatsapp" href="<?= e($whatsapp) ?>" target="_blank" rel="noopener" data-track="whatsapp" data-track-label="action_grid">
-            <?= icon('whatsapp', 23) ?><span>WhatsApp</span>
-        </a>
-    <?php endif; ?>
-
-    <?php if ((bool) $card->setting('vcard_enabled', true)): ?>
-        <a class="dvc-action" href="<?= e($vcardUrl) ?>" data-track="save_contact" data-track-label="action_grid">
-            <?= icon('user-plus', 23) ?><span>Save contact</span>
-        </a>
-    <?php endif; ?>
-
-    <?php if ($directions !== null): ?>
-        <a class="dvc-action" href="<?= e($directions) ?>" target="_blank" rel="noopener" data-track="directions" data-track-label="action_grid">
-            <?= icon('navigation', 23) ?><span>Directions</span>
-        </a>
-    <?php endif; ?>
-
-    <?php if ($email !== null): ?>
-        <a class="dvc-action" href="<?= e($email) ?>" data-track="email" data-track-label="action_grid">
-            <?= icon('mail', 23) ?><span>Email</span>
-        </a>
-    <?php endif; ?>
+    <?php endforeach; ?>
 
     <button class="dvc-action" type="button" data-share
             data-share-url="<?= e($card->url()) ?>"
             data-share-title="<?= e($card->displayName()) ?>"
-            data-share-text="<?= e($card->seoDescription()) ?>">
-        <?= icon('share', 23) ?><span>Share card</span>
+            data-share-text="<?= e($card->seoDescription()) ?>"
+            data-track-label="action_<?= e($variant) ?>">
+        <?= icon('share', $iconSize) ?><span>Share card</span>
     </button>
 </div>

@@ -141,7 +141,43 @@ button { font: inherit; cursor: pointer; }
 .dvc-verified { color: var(--c-primary); vertical-align: middle; margin-left: 4px; }
 
 /* ----------------------------------------------------------- Action grid -- */
+/* Contact arrangements -----------------------------------------------------
+   A design picks one of these. They are genuinely different shapes, not the
+   same grid recoloured: tiles to tap, a stacked list to read, a row that
+   scrolls, or a narrow rail beside the content. */
 .dvc-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 10px; margin-top: 20px; }
+
+/* Stacked list: full-width bars, icon and label side by side. */
+.dvc-actions-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.dvc-actions-list .dvc-action {
+  flex-direction: row; justify-content: flex-start; gap: 13px;
+  min-height: 56px; padding: 12px 18px; font-size: .92rem; text-align: left;
+}
+.dvc-actions-list .dvc-action span { flex: 1; }
+
+/* One scrolling row, so the contact strip never wraps. */
+.dvc-actions-row {
+  display: flex; overflow-x: auto; gap: 9px; padding-bottom: 6px;
+  scrollbar-width: none; scroll-snap-type: x proximity;
+}
+.dvc-actions-row::-webkit-scrollbar { display: none; }
+.dvc-actions-row .dvc-action {
+  flex: 0 0 auto; min-width: 104px; scroll-snap-align: start;
+}
+
+/* Narrow rail: sits beside the identity rather than under it. */
+.dvc-actions-rail { grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 0; }
+.dvc-actions-rail .dvc-action {
+  flex-direction: row; justify-content: flex-start; gap: 10px;
+  min-height: 48px; padding: 9px 13px; font-size: .8rem; text-align: left;
+  border-radius: calc(var(--radius) * .55);
+}
+
+/* Large blocks for designs built out of colour slabs. */
+.dvc-actions-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.dvc-actions-tiles .dvc-action {
+  min-height: 108px; font-size: .84rem; border-radius: calc(var(--radius) * .8); gap: 10px;
+}
 .dvc-action {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
   padding: 15px 8px; min-height: 84px;
@@ -326,7 +362,13 @@ button { font: inherit; cursor: pointer; }
   backdrop-filter: blur(16px) saturate(150%);
   border-color: color-mix(in srgb, var(--c-text) 12%, transparent);
 }
-.lay-glass .dvc-action { background: color-mix(in srgb, var(--c-surface) 65%, transparent); backdrop-filter: blur(10px); }
+/* The tinted treatment applies to the neutral buttons only. Call and
+   WhatsApp carry white labels on a solid fill; replacing that fill with a
+   translucent tint leaves white text on a near-white button. */
+.lay-glass .dvc-action:not(.primary):not(.whatsapp) {
+  background: color-mix(in srgb, var(--c-surface) 65%, transparent);
+  backdrop-filter: blur(10px);
+}
 
 .lay-neon { background: var(--c-bg); }
 .lay-neon .dvc-panel { border-color: color-mix(in srgb, var(--c-primary) 45%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-primary) 22%, transparent), 0 0 32px -8px var(--c-primary); }
@@ -362,7 +404,8 @@ button { font: inherit; cursor: pointer; }
 .lay-bold .dvc-section-title { font-size: 1.05rem; text-transform: none; letter-spacing: -.01em; color: var(--c-text); }
 .lay-bold .dvc-section-title::after { display: none; }
 .lay-bold .dvc-name { font-size: 1.9rem; font-weight: 800; }
-.lay-bold .dvc-action { border: 0; background: var(--c-primary-soft); }
+.lay-bold .dvc-action:not(.primary):not(.whatsapp) { border: 0; background: var(--c-primary-soft); }
+.lay-bold .dvc-action.primary, .lay-bold .dvc-action.whatsapp { border: 0; }
 
 .lay-wave .dvc-section { position: relative; }
 .lay-wave .dvc-panel { border-radius: var(--radius-lg); }
@@ -471,3 +514,100 @@ button { font: inherit; cursor: pointer; }
   .dvc-sticky, .dvc-actions, .dvc-form, .dvc-share-sheet { display: none !important; }
   body { background: #fff; color: #000; }
 }
+
+
+/* ======================================================================
+   Layout structures
+   ----------------------------------------------------------------------
+   Each layout partial emits its own markup; these rules give those shapes
+   their proportions. A design is meant to differ in arrangement, not only
+   in colour, so the rules here move the avatar, the contact block and the
+   cover rather than just restyling them.
+   ====================================================================== */
+
+/* Cover proportions a layout can ask for. */
+.dvc-cover-short { height: calc(var(--cover-h) * .62); }
+.dvc-cover-tall  { height: calc(var(--cover-h) * 1.45); }
+.dvc-cover-full  { height: auto; min-height: calc(var(--cover-h) * 1.9); display: flex; align-items: flex-end; }
+
+/* Hero: identity painted over the cover itself.
+   Text sitting on a photograph or a saturated gradient cannot use the card's
+   own text colours -- those are chosen against the surface, so a dark navy
+   heading on a deep blue cover disappears. The overlay carries its own scrim
+   and light type, the way any caption over an image has to. */
+.dvc-cover-full .dvc-cover-overlay {
+  position: relative; z-index: 3; width: 100%;
+  padding: 30px 20px 30px; text-align: center;
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, .66) 0%,
+    rgba(0, 0, 0, .42) 48%,
+    rgba(0, 0, 0, .06) 100%);
+}
+.dvc-cover-full .dvc-cover-overlay .dvc-name { color: #fff; text-shadow: 0 2px 12px rgba(0, 0, 0, .45); }
+.dvc-cover-full .dvc-cover-overlay .dvc-designation { color: #fff; opacity: .95; }
+.dvc-cover-full .dvc-cover-overlay .dvc-business,
+.dvc-cover-full .dvc-cover-overlay .dvc-tagline { color: rgba(255, 255, 255, .86); }
+.dvc-cover-full .dvc-cover-overlay .dvc-category {
+  background: rgba(255, 255, 255, .18); color: #fff; border-color: rgba(255, 255, 255, .3);
+}
+/* Keep the cover's own fade below the overlay rather than over its text. */
+.dvc-cover-full::after { z-index: 1; }
+.dvc-cover-full .dvc-avatar-wrap { margin-bottom: 14px; }
+.dvc-hero-underlay { padding-top: 18px; }
+
+/* Split: avatar to one side of the name. */
+.dvc-identity-beside .dvc-avatar-wrap { margin: 0; }
+.dvc-identity-beside {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px; align-items: center; text-align: left;
+}
+.dvc-identity-beside .dvc-avatar { width: 84px; height: 84px; }
+.dvc-identity-beside .dvc-name { font-size: 1.28rem; margin-top: 0; }
+.dvc-identity-beside .dvc-tagline { margin-top: 6px; }
+
+/* Rail: contact beside the identity on anything wider than a phone. */
+.dvc-rail-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 210px); gap: 18px; align-items: start; }
+.dvc-rail-contact {
+  background: color-mix(in srgb, var(--c-surface) 80%, transparent);
+  border: 1px solid var(--c-border); border-radius: var(--radius); padding: 12px;
+}
+@media (max-width: 560px) {
+  .dvc-rail-hero { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Magazine: display type over a rule, contact read down the page. */
+.dvc-magazine .dvc-name { font-size: 2.05rem; letter-spacing: -.03em; line-height: 1.08; }
+.dvc-magazine-rule {
+  height: 2px; margin: 18px 0 16px;
+  background: linear-gradient(90deg, var(--c-primary), transparent);
+}
+
+/* Bold: identity inside a solid slab. */
+.dvc-slab {
+  background: var(--c-primary); color: var(--c-on-primary);
+  border-radius: var(--radius); padding: 24px 18px; text-align: center;
+}
+.dvc-slab .dvc-name, .dvc-slab .dvc-designation, .dvc-slab .dvc-business { color: var(--c-on-primary); }
+.dvc-slab .dvc-tagline { color: color-mix(in srgb, var(--c-on-primary) 82%, transparent); }
+
+/* Spotlight: the portrait leads. */
+.dvc-spotlight .dvc-avatar { width: 150px; height: 150px; }
+.dvc-spotlight .dvc-name { font-size: 1.75rem; }
+
+/* Luxe: hairline framing around a restrained panel. */
+.dvc-luxe-panel { border-width: 1px; box-shadow: none; }
+
+/* Glass: translucent panel floating over the cover. */
+.dvc-glass-panel {
+  background: color-mix(in srgb, var(--c-surface) 70%, transparent);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-color: color-mix(in srgb, var(--c-text) 12%, transparent);
+}
+
+/* Stack: identity and contact as separate cards. */
+.dvc-stack { display: grid; gap: 14px; }
+.dvc-stack-contact { padding: 14px; }
+
+/* Wave: curved divider under the cover. */
+.dvc-cover-wave { border-bottom-left-radius: 46% 22%; border-bottom-right-radius: 46% 22%; }
+.dvc-wave { padding-top: 6px; }

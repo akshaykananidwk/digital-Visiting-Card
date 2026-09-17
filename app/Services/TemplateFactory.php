@@ -223,23 +223,45 @@ final class TemplateFactory
      * Generate the design catalogue.
      *
      * @param int $perCategory How many designs to build for each category.
-     * @return array{created:int,skipped:int,total:int}
+     * @return array{created:int,updated:int,skipped:int,total:int}
      */
-    public function generate(int $perCategory = 24, ?callable $progress = null): array
+    public function generate(int $perCategory = 24, ?callable $progress = null, bool $refresh = false): array
     {
         $categoryIds = $this->seedCategories();
         $templates = new Template();
 
         $created = 0;
         $skipped = 0;
+        $updated = 0;
         $sortOrder = $templates->nextSortOrder();
 
         foreach (self::CATEGORIES as $slug => $definition) {
             $designs = $this->buildDesignsFor($slug, $definition, $perCategory);
 
             foreach ($designs as $design) {
-                if ($templates->codeExists($design['code'])) {
-                    $skipped++;
+                $existing = $templates->findByCode($design['code']);
+                if ($existing !== null) {
+                    // Refresh rewrites the design of a built-in template while
+                    // keeping its id, so cards already using it simply pick up
+                    // the improved design instead of losing their template.
+                    if ($refresh) {
+                        $templates->updateById((int) $existing['id'], [
+                            'name'         => $design['name'],
+                            'layout'       => $design['layout'],
+                            'theme_mode'   => $design['mode'],
+                            'style'        => $design['style'],
+                            'industry'     => $design['industry'],
+                            'color_family' => $design['color_family'],
+                            'config'       => $design['config'],
+                            'tags'         => $design['tags'],
+                            'is_premium'   => $design['is_premium'],
+                            'is_featured'  => $design['is_featured'],
+                            'updated_at'   => now(),
+                        ]);
+                        $updated++;
+                    } else {
+                        $skipped++;
+                    }
 
                     continue;
                 }
@@ -274,6 +296,7 @@ final class TemplateFactory
 
         return [
             'created' => $created,
+            'updated' => $updated,
             'skipped' => $skipped,
             'total'   => $templates->count(['is_active' => 1]),
         ];
@@ -285,18 +308,55 @@ final class TemplateFactory
      * @param array{0:string,1:string,2:string,3:array<int,string>,4:array<int,string>,5:array<int,string>,6:string,7:float} $definition
      * @return array<int,array<string,mixed>>
      */
+    /**
+     * Add further layouts to a category's preferred three, so a category
+     * spans several structures instead of recolouring the same one.
+     *
+     * @param array<int,string> $preferred
+     * @return array<int,string>
+     */
+    private function widenLayoutPool(array $preferred, string $categorySlug): array
+    {
+        $extra = array_values(array_diff(array_keys(TemplateRenderer::LAYOUTS), $preferred));
+        if ($extra === []) {
+            return $preferred;
+        }
+
+        sort($extra);
+        $offset = crc32($categorySlug) % count($extra);
+
+        $pool = $preferred;
+        for ($i = 0; $i < 3 && $i < count($extra); $i++) {
+            $pool[] = $extra[($offset + $i * 2) % count($extra)];
+        }
+
+        return array_values(array_unique($pool));
+    }
+
     public function buildDesignsFor(string $categorySlug, array $definition, int $count): array
     {
         [$name, $group, $keywords, $colorFamilies, $layouts, $fontPairs, $style, $premiumRatio] = $definition;
 
         $palettes = $this->palettesFor($colorFamilies);
+
+        // Every category lists the three layouts that suit it best, but three
+        // structures across twenty-four designs makes a category look like one
+        // design recoloured. The pool is widened with further layouts, chosen
+        // from the category's own name so the extra shapes are stable for a
+        // category rather than shuffling on every rebuild.
+        $layouts = $this->widenLayoutPool($layouts, $categorySlug);
+
         $designs = [];
 
         for ($index = 0; $index < $count; $index++) {
             $paletteName = $palettes[$index % count($palettes)];
             [$primary, $secondary, $accent, $family, $paletteMode] = self::PALETTES[$paletteName];
 
-            $layout = $layouts[intdiv($index, max(1, count($palettes))) % count($layouts)];
+            // Cycle layouts per design rather than per palette block. Dividing
+            // by the palette count meant a category with a dozen palettes only
+            // ever reached the first two layouts in its pool, which is why
+            // twenty-four designs looked like the same card recoloured.
+            $layout = $layouts[$index % count($layouts)];
             $pairKey = $fontPairs[($index + intdiv($index, 3)) % count($fontPairs)];
             [$heading, $body] = self::FONT_PAIRS[$pairKey];
 
