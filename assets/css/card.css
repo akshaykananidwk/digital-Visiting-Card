@@ -130,13 +130,13 @@ button { font: inherit; cursor: pointer; }
   background: var(--c-surface); border: 2px solid var(--c-surface); box-shadow: var(--shadow); padding: 3px;
 }
 .dvc-name { font-size: 1.62rem; margin: 14px 0 2px; }
-.dvc-designation { color: var(--c-primary); font-weight: 700; font-size: .95rem; margin: 0; }
+.dvc-designation { color: var(--c-primary-readable, var(--c-primary)); font-weight: 700; font-size: .95rem; margin: 0; }
 .dvc-business { color: var(--c-muted); font-size: .92rem; margin: 3px 0 0; }
 .dvc-tagline { color: var(--c-muted); font-size: .88rem; margin: 9px 0 0; font-style: italic; }
 .dvc-category {
   display: inline-flex; align-items: center; gap: 6px; margin-top: 11px;
   padding: 4px 13px; border-radius: 999px; font-size: .74rem; font-weight: 800; letter-spacing: .05em;
-  text-transform: uppercase; background: var(--c-primary-soft); color: var(--c-primary);
+  text-transform: uppercase; background: var(--c-primary-soft); color: var(--c-primary-readable, var(--c-primary));
 }
 .dvc-verified { color: var(--c-primary); vertical-align: middle; margin-left: 4px; }
 
@@ -231,7 +231,7 @@ button { font: inherit; cursor: pointer; }
 .dvc-contact-row:last-child { border-bottom: 0; }
 .dvc-contact-icon {
   width: 40px; height: 40px; border-radius: 12px; flex: none; display: grid; place-items: center;
-  background: var(--c-primary-soft); color: var(--c-primary);
+  background: var(--c-primary-soft); color: var(--c-primary-readable, var(--c-primary));
 }
 .dvc-contact-icon svg { width: 19px; height: 19px; }
 .dvc-contact-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--c-muted); font-weight: 800; }
@@ -249,7 +249,7 @@ button { font: inherit; cursor: pointer; }
 .dvc-service-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
 .dvc-service h4 { margin: 0 0 3px; font-size: .96rem; }
 .dvc-service p { margin: 0; font-size: .85rem; color: var(--c-muted); }
-.dvc-service-price { font-weight: 800; color: var(--c-primary); font-size: .88rem; margin-top: 5px; }
+.dvc-service-price { font-weight: 800; color: var(--c-primary-readable, var(--c-primary)); font-size: .88rem; margin-top: 5px; }
 
 .dvc-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 13px; }
 .dvc-product {
@@ -261,7 +261,7 @@ button { font: inherit; cursor: pointer; }
 .dvc-product:hover .dvc-product-img img { transform: scale(1.05); }
 .dvc-product-body { padding: 11px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .dvc-product-name { font-weight: 700; font-size: .87rem; line-height: 1.32; }
-.dvc-product-price { font-weight: 800; color: var(--c-primary); font-size: .95rem; }
+.dvc-product-price { font-weight: 800; color: var(--c-primary-readable, var(--c-primary)); font-size: .95rem; }
 .dvc-product-price del { color: var(--c-muted); font-weight: 500; font-size: .78rem; margin-left: 6px; }
 .dvc-product .dvc-btn { min-height: 44px; padding: 10px 12px; font-size: .78rem; margin-top: auto; }
 
@@ -588,6 +588,16 @@ button { font: inherit; cursor: pointer; }
   border-radius: var(--radius); padding: 24px 18px; text-align: center;
 }
 .dvc-slab .dvc-name, .dvc-slab .dvc-designation, .dvc-slab .dvc-business { color: var(--c-on-primary); }
+/* Everything inside the slab sits on the primary colour, not on the card
+   surface, so it has to use the on-primary pair. The trade badge was styled
+   for the surface and came out as primary-on-primary: invisible. */
+.dvc-slab .dvc-category {
+  background: color-mix(in srgb, var(--c-on-primary) 20%, transparent);
+  color: var(--c-on-primary);
+  border-color: color-mix(in srgb, var(--c-on-primary) 38%, transparent);
+}
+.dvc-slab .dvc-category svg { color: var(--c-on-primary); }
+.dvc-slab .dvc-avatar { border-color: color-mix(in srgb, var(--c-on-primary) 55%, transparent); }
 .dvc-slab .dvc-tagline { color: color-mix(in srgb, var(--c-on-primary) 82%, transparent); }
 
 /* Spotlight: the portrait leads. */
@@ -611,3 +621,34 @@ button { font: inherit; cursor: pointer; }
 /* Wave: curved divider under the cover. */
 .dvc-cover-wave { border-bottom-left-radius: 46% 22%; border-bottom-right-radius: 46% 22%; }
 .dvc-wave { padding-top: 6px; }
+
+
+/* Trade mark --------------------------------------------------------------
+   A large, faint industry motif inside the cover. It is what makes a
+   restaurant card read as a restaurant and a temple card as a temple before
+   any of the text is scanned, which is the whole job of a visiting card.
+   Decorative only, so it is hidden from assistive technology. */
+.dvc-cover-motif {
+  position: absolute;
+  right: -14px;
+  bottom: -26px;
+  z-index: 1;
+  color: #fff;
+  opacity: .14;
+  pointer-events: none;
+  line-height: 0;
+}
+.dvc-cover-motif svg { width: 132px; height: 132px; stroke-width: 1.4; }
+
+/* On a light cover the white mark disappears, so it darkens instead. */
+.mode-light .dvc-cover-motif { color: var(--c-secondary); opacity: .1; }
+
+/* Layouts that lean on the cover carry it larger and more centrally. */
+.lay-hero .dvc-cover-motif { right: 50%; bottom: auto; top: 14px; transform: translateX(50%); opacity: .12; }
+.lay-hero .dvc-cover-motif svg { width: 168px; height: 168px; }
+.lay-bold .dvc-cover-motif { opacity: .2; }
+.lay-magazine .dvc-cover-motif { left: -10px; right: auto; }
+
+/* The trade badge shows the same mark at text size. */
+.dvc-category { display: inline-flex; align-items: center; gap: 6px; }
+.dvc-category svg { width: 13px; height: 13px; flex: 0 0 auto; }

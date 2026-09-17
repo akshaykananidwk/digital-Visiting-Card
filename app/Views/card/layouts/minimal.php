@@ -9,7 +9,7 @@
 <div class="dvc-shell">
     <section class="dvc-hero dvc-section" style="padding-top:34px">
         <div class="dvc-hero-inner">
-            <?= $__view->include('card.partials.hero-core', ['card' => $card]) ?>
+            <?= $__view->include('card.partials.hero-core', ['card' => $card, 'design' => $design ?? null]) ?>
         </div>
         <?= $__view->include('card.partials.actions', ['card' => $card, 'variant' => 'list']) ?>
     </section>

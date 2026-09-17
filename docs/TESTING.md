@@ -317,7 +317,22 @@ Refreshing the built-in designs is `templates:generate --refresh`, which
 rewrites them in place and keeps their ids, so a card already using a design
 picks up the improvement rather than losing its template.
 
-### Button labels that could not be read
+### Every design looked the same, whatever the trade
+
+Reported from the live site, and correct: a restaurant design and a computer
+shop design were the same card in different colours. The catalogue had colour
+families, layouts and fonts per category, but nothing that said what the
+business *was*. A visiting card's job is to be recognised at a glance, and
+industry design conventions are explicit about how: cutlery for a restaurant,
+scissors for a salon, a stethoscope for a clinic.
+
+Every category now carries a trade mark, rendered twice -- large and faint
+inside the cover, and at text size in the trade badge. The icon set grew from
+80 interface icons to 119 with the trade motifs added, drawn on the same
+stroke grid. A dentist card shows a tooth, a temple card a shikhara, a travel
+agency a plane.
+
+### Text that could not be read, and three wrong ways to measure it
 
 Measured across a sample of designs: 196 action buttons fell below 4.5:1,
 including an outlined button whose label was navy on a navy dark theme at
@@ -329,6 +344,12 @@ surface, and a filled button's label is whichever of light or dark actually
 reads. That removed every failure except the WhatsApp button, which keeps the
 vendor's own brand green and is excluded deliberately.
 
+Correcting the tokens themselves came next. `--c-muted` carries the business
+name, tagline and section headings, and `--c-primary` is used as text on
+outlined buttons and the trade badge; neither was ever checked against the
+surface it lands on. Both are now derived, and the same correction lifted all
+1,200 designs at once.
+
 Two further cases came out of the new layouts. The bold and glass layouts
 restyled every action button with a translucent tint, including Call and
 WhatsApp, which carry white labels on a solid fill -- leaving white text on a
@@ -338,11 +359,31 @@ colours do not apply: a dark navy heading chosen against a white surface
 disappears on a deep blue cover. That overlay carries its own scrim and light
 type.
 
-The contrast check itself was wrong in the same direction: it read `rgba()`
-values at face value instead of compositing them over what was behind, so a
-translucent button was scored against a colour that is never painted. It now
-composites alpha, which is what turned the bold layout's buttons from a
-plausible-looking number into the failure they were.
+The check itself was wrong three times over, and each wrong answer was
+confidently numeric:
+
+* It read `rgba()` at face value instead of compositing over what was behind,
+  so a translucent button was scored against a colour never painted.
+* Walking the DOM for a background cannot see a gradient or a cover image, so
+  white-on-green scored as white-on-white -- 87 of 282 elements reported as
+  failing when the real figure was two.
+* Reading the text colour out of the pixels instead ran into anti-aliasing:
+  small labels have few full-strength pixels, so a 6.4:1 button measured
+  2.4:1.
+
+What holds is a hybrid: the text colour from the computed style, which is what
+the standard is defined against, and the background from the painted pixels,
+which is the only way to see a gradient. Two more traps sat behind that.
+Chrome resolves `color-mix()` to `color(srgb …)` rather than `rgb()`, and the
+card stylesheet uses `color-mix()`, so those elements parsed as null and were
+skipped **in silence**. And where text is nearly the colour of its background,
+discarding the glyph pixels discards the background too, which the check
+treated as "nothing to compare" and skipped as well.
+
+Both silent skips are now failures, and an element whose colour cannot be read
+is reported rather than dropped. The test was checked against a deliberately
+invisible heading: before these fixes it reported everything passing, which is
+the only reason the flaws were found.
 
 ### An update could be blocked by a file the host owns
 

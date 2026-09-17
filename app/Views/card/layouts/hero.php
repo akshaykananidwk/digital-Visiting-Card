@@ -8,8 +8,11 @@
 $cover = $card->image('cover_image');
 ?>
 <header class="dvc-cover dvc-cover-full" <?= $cover !== null ? 'style="background-image:url(\'' . e($cover) . '\')"' : '' ?>>
+    <?php if (($design->motif() ?? '') !== ''): ?>
+        <span class="dvc-cover-motif" aria-hidden="true"><?= icon($design->motif(), 132) ?></span>
+    <?php endif; ?>
     <div class="dvc-cover-overlay">
-        <?= $__view->include('card.partials.hero-core', ['card' => $card]) ?>
+        <?= $__view->include('card.partials.hero-core', ['card' => $card, 'design' => $design ?? null]) ?>
     </div>
 </header>
 <div class="dvc-shell">

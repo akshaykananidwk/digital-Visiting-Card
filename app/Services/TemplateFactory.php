@@ -77,10 +77,10 @@ final class TemplateFactory
         'geometric'  => ['Outfit', 'DM Sans'],
         'tech'       => ['Space Grotesk', 'Work Sans'],
         'editorial'  => ['Playfair Display', 'Lora'],
-        'luxury'     => ['Cormorant Garamond', 'Libre Baskerville'],
+        'luxury'     => ['Cormorant Garamond', 'Libre Baskerville', 'gem'],
         'impact'     => ['Bebas Neue', 'Rubik'],
         'friendly'   => ['Nunito', 'Nunito'],
-        'corporate'  => ['Montserrat', 'Plus Jakarta Sans'],
+        'corporate'  => ['Montserrat', 'Plus Jakarta Sans', 'briefcase-md'],
         'indic'      => ['Mukta', 'Noto Sans Gujarati'],
     ];
 
@@ -93,68 +93,68 @@ final class TemplateFactory
      */
     public const CATEGORIES = [
         // ---------------------------------------------------- Computer / IT
-        'computer-shop'      => ['Computer Shop', 'Computer / IT', 'computer pc desktop assembly sales', ['blue', 'cyan', 'grey'], ['hero', 'split', 'bold'], ['tech', 'modern'], 'tech', 0.35],
-        'laptop-shop'        => ['Laptop Shop', 'Computer / IT', 'laptop notebook macbook repair sales', ['blue', 'grey', 'purple'], ['split', 'classic', 'stack'], ['tech', 'clean'], 'tech', 0.35],
-        'cctv-security'      => ['CCTV & Security', 'Computer / IT', 'cctv camera security surveillance dvr nvr', ['blue', 'black', 'red'], ['neon', 'hero', 'bold'], ['tech', 'impact'], 'tech', 0.4],
-        'networking'         => ['Networking', 'Computer / IT', 'network lan wifi router cabling fiber', ['cyan', 'blue', 'teal'], ['split', 'glass', 'hero'], ['tech', 'geometric'], 'tech', 0.4],
-        'it-services'        => ['IT Services', 'Computer / IT', 'it support amc service annual maintenance', ['blue', 'teal', 'grey'], ['classic', 'minimal', 'stack'], ['clean', 'corporate'], 'corporate', 0.3],
-        'software-developer' => ['Software Developer', 'Computer / IT', 'software developer programmer coder engineer', ['purple', 'blue', 'black'], ['neon', 'minimal', 'glass'], ['tech', 'geometric'], 'modern', 0.45],
-        'web-developer'      => ['Web Developer', 'Computer / IT', 'web developer website design freelancer', ['purple', 'cyan', 'pink'], ['glass', 'minimal', 'spotlight'], ['geometric', 'tech'], 'modern', 0.45],
-        'mobile-repair'      => ['Mobile Repair', 'Computer / IT', 'mobile phone repair screen battery service', ['orange', 'blue', 'green'], ['bold', 'hero', 'stack'], ['impact', 'modern'], 'bold', 0.3],
-        'electronics'        => ['Electronics', 'Computer / IT', 'electronics appliances led tv audio', ['blue', 'red', 'orange'], ['hero', 'magazine', 'bold'], ['modern', 'impact'], 'bold', 0.3],
+        'computer-shop'      => ['Computer Shop', 'Computer / IT', 'computer pc desktop assembly sales', ['blue', 'cyan', 'grey'], ['hero', 'split', 'bold'], ['tech', 'modern'], 'tech', 0.35, 'monitor'],
+        'laptop-shop'        => ['Laptop Shop', 'Computer / IT', 'laptop notebook macbook repair sales', ['blue', 'grey', 'purple'], ['split', 'classic', 'stack'], ['tech', 'clean'], 'tech', 0.35, 'monitor'],
+        'cctv-security'      => ['CCTV & Security', 'Computer / IT', 'cctv camera security surveillance dvr nvr', ['blue', 'black', 'red'], ['neon', 'hero', 'bold'], ['tech', 'impact'], 'tech', 0.4, 'cctv'],
+        'networking'         => ['Networking', 'Computer / IT', 'network lan wifi router cabling fiber', ['cyan', 'blue', 'teal'], ['split', 'glass', 'hero'], ['tech', 'geometric'], 'tech', 0.4, 'globe'],
+        'it-services'        => ['IT Services', 'Computer / IT', 'it support amc service annual maintenance', ['blue', 'teal', 'grey'], ['classic', 'minimal', 'stack'], ['clean', 'corporate'], 'corporate', 0.3, 'wrench'],
+        'software-developer' => ['Software Developer', 'Computer / IT', 'software developer programmer coder engineer', ['purple', 'blue', 'black'], ['neon', 'minimal', 'glass'], ['tech', 'geometric'], 'modern', 0.45, 'git'],
+        'web-developer'      => ['Web Developer', 'Computer / IT', 'web developer website design freelancer', ['purple', 'cyan', 'pink'], ['glass', 'minimal', 'spotlight'], ['geometric', 'tech'], 'modern', 0.45, 'crop'],
+        'mobile-repair'      => ['Mobile Repair', 'Computer / IT', 'mobile phone repair screen battery service', ['orange', 'blue', 'green'], ['bold', 'hero', 'stack'], ['impact', 'modern'], 'bold', 0.3, 'phone'],
+        'electronics'        => ['Electronics', 'Computer / IT', 'electronics appliances led tv audio', ['blue', 'red', 'orange'], ['hero', 'magazine', 'bold'], ['modern', 'impact'], 'bold', 0.3, 'bolt-wire'],
 
         // ----------------------------------------------------------- Business
-        'general-business'   => ['General Business', 'Business', 'business company enterprise firm', ['blue', 'grey', 'green'], ['classic', 'split', 'stack'], ['corporate', 'clean'], 'corporate', 0.3],
-        'shop-owner'         => ['Shop Owner', 'Business', 'shop store retail kirana outlet', ['orange', 'green', 'red'], ['classic', 'bold', 'wave'], ['friendly', 'modern'], 'friendly', 0.25],
-        'manufacturer'       => ['Manufacturer', 'Business', 'manufacturer factory industry production', ['grey', 'blue', 'bronze'], ['split', 'magazine', 'bold'], ['corporate', 'impact'], 'corporate', 0.3],
-        'distributor'        => ['Distributor', 'Business', 'distributor supply chain dealership', ['blue', 'teal', 'grey'], ['classic', 'split', 'stack'], ['corporate', 'clean'], 'corporate', 0.3],
-        'wholesaler'         => ['Wholesaler', 'Business', 'wholesale bulk trading supplier', ['green', 'orange', 'blue'], ['classic', 'bold', 'stack'], ['modern', 'corporate'], 'corporate', 0.25],
-        'retailer'           => ['Retailer', 'Business', 'retail showroom counter sales', ['pink', 'orange', 'purple'], ['hero', 'magazine', 'wave'], ['friendly', 'modern'], 'friendly', 0.25],
-        'trader'             => ['Trader', 'Business', 'trader import export commodity', ['gold', 'blue', 'grey'], ['luxe', 'classic', 'split'], ['corporate', 'luxury'], 'corporate', 0.35],
+        'general-business'   => ['General Business', 'Business', 'business company enterprise firm', ['blue', 'grey', 'green'], ['classic', 'split', 'stack'], ['corporate', 'clean'], 'corporate', 0.3, 'briefcase-md'],
+        'shop-owner'         => ['Shop Owner', 'Business', 'shop store retail kirana outlet', ['orange', 'green', 'red'], ['classic', 'bold', 'wave'], ['friendly', 'modern'], 'friendly', 0.25, 'shopping'],
+        'manufacturer'       => ['Manufacturer', 'Business', 'manufacturer factory industry production', ['grey', 'blue', 'bronze'], ['split', 'magazine', 'bold'], ['corporate', 'impact'], 'corporate', 0.3, 'brick'],
+        'distributor'        => ['Distributor', 'Business', 'distributor supply chain dealership', ['blue', 'teal', 'grey'], ['classic', 'split', 'stack'], ['corporate', 'clean'], 'corporate', 0.3, 'truck'],
+        'wholesaler'         => ['Wholesaler', 'Business', 'wholesale bulk trading supplier', ['green', 'orange', 'blue'], ['classic', 'bold', 'stack'], ['modern', 'corporate'], 'corporate', 0.25, 'package'],
+        'retailer'           => ['Retailer', 'Business', 'retail showroom counter sales', ['pink', 'orange', 'purple'], ['hero', 'magazine', 'wave'], ['friendly', 'modern'], 'friendly', 0.25, 'shopping'],
+        'trader'             => ['Trader', 'Business', 'trader import export commodity', ['gold', 'blue', 'grey'], ['luxe', 'classic', 'split'], ['corporate', 'luxury'], 'corporate', 0.35, 'chart-up'],
 
         // -------------------------------------------------------- Professional
-        'accountant'         => ['Accountant', 'Professional', 'accountant accounts bookkeeping tally gst', ['blue', 'teal', 'grey'], ['minimal', 'classic', 'stack'], ['corporate', 'clean'], 'corporate', 0.3],
-        'chartered-accountant' => ['Chartered Accountant', 'Professional', 'ca chartered accountant audit tax itr', ['blue', 'grey', 'gold'], ['minimal', 'luxe', 'classic'], ['corporate', 'editorial'], 'corporate', 0.4],
-        'lawyer'             => ['Lawyer & Advocate', 'Professional', 'lawyer advocate legal court notary', ['maroon', 'black', 'gold'], ['luxe', 'minimal', 'magazine'], ['editorial', 'luxury'], 'premium', 0.45],
-        'architect'          => ['Architect', 'Professional', 'architect architecture design plan 3d', ['grey', 'black', 'beige'], ['minimal', 'magazine', 'split'], ['geometric', 'editorial'], 'minimal', 0.45],
-        'engineer'           => ['Engineer', 'Professional', 'engineer civil mechanical structural', ['blue', 'orange', 'grey'], ['split', 'classic', 'bold'], ['tech', 'corporate'], 'corporate', 0.3],
-        'consultant'         => ['Consultant', 'Professional', 'consultant advisory strategy coach', ['purple', 'blue', 'teal'], ['minimal', 'glass', 'spotlight'], ['clean', 'corporate'], 'modern', 0.35],
-        'doctor'             => ['Doctor', 'Professional', 'doctor clinic physician hospital mbbs', ['teal', 'blue', 'green'], ['classic', 'spotlight', 'stack'], ['clean', 'friendly'], 'clean', 0.3],
-        'dentist'            => ['Dentist', 'Professional', 'dentist dental clinic teeth orthodontic', ['cyan', 'teal', 'blue'], ['spotlight', 'classic', 'wave'], ['clean', 'friendly'], 'clean', 0.3],
-        'real-estate'        => ['Real Estate', 'Professional', 'real estate property builder flats plots', ['gold', 'blue', 'green'], ['hero', 'magazine', 'luxe'], ['luxury', 'corporate'], 'premium', 0.45],
-        'insurance-agent'    => ['Insurance Agent', 'Professional', 'insurance lic policy agent mediclaim', ['blue', 'green', 'teal'], ['classic', 'split', 'stack'], ['corporate', 'friendly'], 'corporate', 0.25],
+        'accountant'         => ['Accountant', 'Professional', 'accountant accounts bookkeeping tally gst', ['blue', 'teal', 'grey'], ['minimal', 'classic', 'stack'], ['corporate', 'clean'], 'corporate', 0.3, 'chart-up'],
+        'chartered-accountant' => ['Chartered Accountant', 'Professional', 'ca chartered accountant audit tax itr', ['blue', 'grey', 'gold'], ['minimal', 'luxe', 'classic'], ['corporate', 'editorial'], 'corporate', 0.4, 'scale'],
+        'lawyer'             => ['Lawyer & Advocate', 'Professional', 'lawyer advocate legal court notary', ['maroon', 'black', 'gold'], ['luxe', 'minimal', 'magazine'], ['editorial', 'luxury'], 'premium', 0.45, 'scale'],
+        'architect'          => ['Architect', 'Professional', 'architect architecture design plan 3d', ['grey', 'black', 'beige'], ['minimal', 'magazine', 'split'], ['geometric', 'editorial'], 'minimal', 0.45, 'crop'],
+        'engineer'           => ['Engineer', 'Professional', 'engineer civil mechanical structural', ['blue', 'orange', 'grey'], ['split', 'classic', 'bold'], ['tech', 'corporate'], 'corporate', 0.3, 'wrench'],
+        'consultant'         => ['Consultant', 'Professional', 'consultant advisory strategy coach', ['purple', 'blue', 'teal'], ['minimal', 'glass', 'spotlight'], ['clean', 'corporate'], 'modern', 0.35, 'briefcase-md'],
+        'doctor'             => ['Doctor', 'Professional', 'doctor clinic physician hospital mbbs', ['teal', 'blue', 'green'], ['classic', 'spotlight', 'stack'], ['clean', 'friendly'], 'clean', 0.3, 'stethoscope'],
+        'dentist'            => ['Dentist', 'Professional', 'dentist dental clinic teeth orthodontic', ['cyan', 'teal', 'blue'], ['spotlight', 'classic', 'wave'], ['clean', 'friendly'], 'clean', 0.3, 'tooth'],
+        'real-estate'        => ['Real Estate', 'Professional', 'real estate property builder flats plots', ['gold', 'blue', 'green'], ['hero', 'magazine', 'luxe'], ['luxury', 'corporate'], 'premium', 0.45, 'home'],
+        'insurance-agent'    => ['Insurance Agent', 'Professional', 'insurance lic policy agent mediclaim', ['blue', 'green', 'teal'], ['classic', 'split', 'stack'], ['corporate', 'friendly'], 'corporate', 0.25, 'shield'],
 
         // ------------------------------------------------------------ Creative
-        'graphic-designer'   => ['Graphic Designer', 'Creative', 'graphic designer logo branding creative', ['pink', 'purple', 'orange'], ['glass', 'bold', 'magazine'], ['geometric', 'impact'], 'creative', 0.5],
-        'photographer'       => ['Photographer', 'Creative', 'photographer photography studio wedding shoot', ['black', 'grey', 'beige'], ['magazine', 'hero', 'minimal'], ['editorial', 'luxury'], 'premium', 0.5],
-        'videographer'       => ['Videographer', 'Creative', 'videographer cinematography film editing reels', ['black', 'purple', 'red'], ['neon', 'hero', 'magazine'], ['impact', 'tech'], 'premium', 0.5],
-        'printing-press'     => ['Printing Press', 'Creative', 'printing press offset digital flex banner', ['red', 'blue', 'yellow'], ['bold', 'classic', 'wave'], ['impact', 'modern'], 'bold', 0.25],
-        'screen-printing'    => ['Screen Printing', 'Creative', 'screen printing t-shirt sublimation mug', ['orange', 'pink', 'green'], ['bold', 'wave', 'stack'], ['impact', 'friendly'], 'bold', 0.25],
-        'digital-marketing'  => ['Digital Marketing', 'Creative', 'digital marketing seo ads social growth', ['purple', 'cyan', 'pink'], ['glass', 'neon', 'bold'], ['geometric', 'tech'], 'modern', 0.45],
-        'social-media'       => ['Social Media Manager', 'Creative', 'social media manager instagram content creator', ['pink', 'purple', 'cyan'], ['glass', 'spotlight', 'bold'], ['geometric', 'friendly'], 'modern', 0.45],
+        'graphic-designer'   => ['Graphic Designer', 'Creative', 'graphic designer logo branding creative', ['pink', 'purple', 'orange'], ['glass', 'bold', 'magazine'], ['geometric', 'impact'], 'creative', 0.5, 'palette'],
+        'photographer'       => ['Photographer', 'Creative', 'photographer photography studio wedding shoot', ['black', 'grey', 'beige'], ['magazine', 'hero', 'minimal'], ['editorial', 'luxury'], 'premium', 0.5, 'camera'],
+        'videographer'       => ['Videographer', 'Creative', 'videographer cinematography film editing reels', ['black', 'purple', 'red'], ['neon', 'hero', 'magazine'], ['impact', 'tech'], 'premium', 0.5, 'video'],
+        'printing-press'     => ['Printing Press', 'Creative', 'printing press offset digital flex banner', ['red', 'blue', 'yellow'], ['bold', 'classic', 'wave'], ['impact', 'modern'], 'bold', 0.25, 'printer'],
+        'screen-printing'    => ['Screen Printing', 'Creative', 'screen printing t-shirt sublimation mug', ['orange', 'pink', 'green'], ['bold', 'wave', 'stack'], ['impact', 'friendly'], 'bold', 0.25, 'shirt'],
+        'digital-marketing'  => ['Digital Marketing', 'Creative', 'digital marketing seo ads social growth', ['purple', 'cyan', 'pink'], ['glass', 'neon', 'bold'], ['geometric', 'tech'], 'modern', 0.45, 'chart-up'],
+        'social-media'       => ['Social Media Manager', 'Creative', 'social media manager instagram content creator', ['pink', 'purple', 'cyan'], ['glass', 'spotlight', 'bold'], ['geometric', 'friendly'], 'modern', 0.45, 'sparkles'],
 
         // --------------------------------------------------------- Hospitality
-        'hotel'              => ['Hotel', 'Hospitality', 'hotel rooms stay lodging booking', ['gold', 'blue', 'maroon'], ['luxe', 'hero', 'magazine'], ['luxury', 'editorial'], 'premium', 0.5],
-        'restaurant'         => ['Restaurant', 'Hospitality', 'restaurant food dining cafe menu', ['red', 'orange', 'green'], ['hero', 'magazine', 'wave'], ['editorial', 'friendly'], 'premium', 0.4],
-        'resort'             => ['Resort', 'Hospitality', 'resort beach villa holiday spa', ['teal', 'green', 'gold'], ['hero', 'luxe', 'magazine'], ['luxury', 'clean'], 'premium', 0.5],
-        'travel-agency'      => ['Travel Agency', 'Hospitality', 'travel agency tour package flight visa', ['blue', 'orange', 'teal'], ['hero', 'wave', 'split'], ['friendly', 'modern'], 'friendly', 0.35],
-        'tour-operator'      => ['Tour Operator', 'Hospitality', 'tour operator sightseeing bus taxi package', ['orange', 'teal', 'yellow'], ['wave', 'hero', 'stack'], ['friendly', 'impact'], 'friendly', 0.3],
+        'hotel'              => ['Hotel', 'Hospitality', 'hotel rooms stay lodging booking', ['gold', 'blue', 'maroon'], ['luxe', 'hero', 'magazine'], ['luxury', 'editorial'], 'premium', 0.5, 'bed'],
+        'restaurant'         => ['Restaurant', 'Hospitality', 'restaurant food dining cafe menu', ['red', 'orange', 'green'], ['hero', 'magazine', 'wave'], ['editorial', 'friendly'], 'premium', 0.4, 'utensils'],
+        'resort'             => ['Resort', 'Hospitality', 'resort beach villa holiday spa', ['teal', 'green', 'gold'], ['hero', 'luxe', 'magazine'], ['luxury', 'clean'], 'premium', 0.5, 'plane'],
+        'travel-agency'      => ['Travel Agency', 'Hospitality', 'travel agency tour package flight visa', ['blue', 'orange', 'teal'], ['hero', 'wave', 'split'], ['friendly', 'modern'], 'friendly', 0.35, 'plane'],
+        'tour-operator'      => ['Tour Operator', 'Hospitality', 'tour operator sightseeing bus taxi package', ['orange', 'teal', 'yellow'], ['wave', 'hero', 'stack'], ['friendly', 'impact'], 'friendly', 0.3, 'car'],
 
         // ---------------------------------------------- Local / Religious / Gujarat
-        'dwarka'             => ['Dwarka Special', 'Local & Cultural', 'dwarka dwarkadhish gujarat temple darshan', ['orange', 'gold', 'blue'], ['luxe', 'classic', 'wave'], ['indic', 'editorial'], 'traditional', 0.4],
-        'krishna'            => ['Krishna Theme', 'Local & Cultural', 'krishna radha bhakti peacock flute mandir', ['blue', 'gold', 'teal'], ['luxe', 'hero', 'classic'], ['indic', 'editorial'], 'traditional', 0.4],
-        'temple'             => ['Temple & Trust', 'Local & Cultural', 'temple mandir trust seva donation aarti', ['gold', 'orange', 'maroon'], ['luxe', 'classic', 'wave'], ['indic', 'luxury'], 'traditional', 0.4],
-        'gujarat-traditional'=> ['Traditional Gujarati', 'Local & Cultural', 'gujarat gujarati traditional garba navratri', ['maroon', 'orange', 'gold'], ['luxe', 'bold', 'classic'], ['indic', 'impact'], 'traditional', 0.35],
+        'dwarka'             => ['Dwarka Special', 'Local & Cultural', 'dwarka dwarkadhish gujarat temple darshan', ['orange', 'gold', 'blue'], ['luxe', 'classic', 'wave'], ['indic', 'editorial'], 'traditional', 0.4, 'temple'],
+        'krishna'            => ['Krishna Theme', 'Local & Cultural', 'krishna radha bhakti peacock flute mandir', ['blue', 'gold', 'teal'], ['luxe', 'hero', 'classic'], ['indic', 'editorial'], 'traditional', 0.4, 'diya'],
+        'temple'             => ['Temple & Trust', 'Local & Cultural', 'temple mandir trust seva donation aarti', ['gold', 'orange', 'maroon'], ['luxe', 'classic', 'wave'], ['indic', 'luxury'], 'traditional', 0.4, 'temple'],
+        'gujarat-traditional'=> ['Traditional Gujarati', 'Local & Cultural', 'gujarat gujarati traditional garba navratri', ['maroon', 'orange', 'gold'], ['luxe', 'bold', 'classic'], ['indic', 'impact'], 'traditional', 0.35, 'diya'],
 
         // -------------------------------------------------------------- Modern
-        'minimal'            => ['Minimal', 'Modern', 'minimal simple clean whitespace', ['grey', 'black', 'beige'], ['minimal', 'stack', 'classic'], ['clean', 'geometric'], 'minimal', 0.3],
+        'minimal'            => ['Minimal', 'Modern', 'minimal simple clean whitespace', ['grey', 'black', 'beige'], ['minimal', 'stack', 'classic'], ['clean', 'geometric'], 'minimal', 0.3, 'sparkles'],
         'corporate'          => ['Corporate', 'Modern', 'corporate professional formal business', ['blue', 'grey', 'teal'], ['classic', 'split', 'magazine'], ['corporate', 'clean'], 'corporate', 0.3],
         'luxury'             => ['Luxury', 'Modern', 'luxury premium exclusive elite gold', ['gold', 'black', 'maroon'], ['luxe', 'magazine', 'minimal'], ['luxury', 'editorial'], 'premium', 0.7],
-        'glassmorphism'      => ['Glassmorphism', 'Modern', 'glass blur frosted transparent modern', ['purple', 'cyan', 'blue'], ['glass', 'spotlight', 'hero'], ['geometric', 'clean'], 'glass', 0.6],
-        'gradient'           => ['Gradient', 'Modern', 'gradient colorful vibrant mesh', ['pink', 'purple', 'orange'], ['hero', 'glass', 'bold'], ['geometric', 'modern'], 'gradient', 0.5],
-        'neon'               => ['Neon', 'Modern', 'neon glow cyberpunk dark vibrant', ['cyan', 'pink', 'green'], ['neon', 'bold', 'glass'], ['tech', 'impact'], 'neon', 0.6],
-        'dark-mode'          => ['Dark', 'Modern', 'dark black night mode elegant', ['black', 'grey', 'blue'], ['neon', 'minimal', 'stack'], ['tech', 'clean'], 'dark', 0.5],
-        'three-d'            => ['3D & Animated', 'Modern', '3d animated motion parallax depth', ['purple', 'blue', 'cyan'], ['glass', 'spotlight', 'hero'], ['geometric', 'tech'], '3d', 0.8],
+        'glassmorphism'      => ['Glassmorphism', 'Modern', 'glass blur frosted transparent modern', ['purple', 'cyan', 'blue'], ['glass', 'spotlight', 'hero'], ['geometric', 'clean'], 'glass', 0.6, 'layers'],
+        'gradient'           => ['Gradient', 'Modern', 'gradient colorful vibrant mesh', ['pink', 'purple', 'orange'], ['hero', 'glass', 'bold'], ['geometric', 'modern'], 'gradient', 0.5, 'sparkles'],
+        'neon'               => ['Neon', 'Modern', 'neon glow cyberpunk dark vibrant', ['cyan', 'pink', 'green'], ['neon', 'bold', 'glass'], ['tech', 'impact'], 'neon', 0.6, 'zap'],
+        'dark-mode'          => ['Dark', 'Modern', 'dark black night mode elegant', ['black', 'grey', 'blue'], ['neon', 'minimal', 'stack'], ['tech', 'clean'], 'dark', 0.5, 'moon'],
+        'three-d'            => ['3D & Animated', 'Modern', '3d animated motion parallax depth', ['purple', 'blue', 'cyan'], ['glass', 'spotlight', 'hero'], ['geometric', 'tech'], '3d', 0.8, 'layers'],
     ];
 
     /** Adjectives used to make each generated design name unique and human. */
@@ -336,6 +336,9 @@ final class TemplateFactory
     public function buildDesignsFor(string $categorySlug, array $definition, int $count): array
     {
         [$name, $group, $keywords, $colorFamilies, $layouts, $fontPairs, $style, $premiumRatio] = $definition;
+        // The trade mark for this category, e.g. cutlery for a restaurant.
+        // A visitor should recognise the trade before reading a word.
+        $motif = $definition[8] ?? 'sparkles';
 
         $palettes = $this->palettesFor($colorFamilies);
 
@@ -366,6 +369,7 @@ final class TemplateFactory
             $isPremium = (int) floor(($index + 1) * $premiumRatio) > (int) floor($index * $premiumRatio) ? 1 : 0;
 
             $config = $this->buildConfig($primary, $secondary, $accent, $heading, $body, $layout, $mode, $index, (bool) $isPremium);
+            $config['motif'] = $motif;
 
             $adjective = self::ADJECTIVES[($index * 7 + crc32($categorySlug)) % count(self::ADJECTIVES)];
             $designName = sprintf('%s %s %s', $name, $adjective, $paletteName);

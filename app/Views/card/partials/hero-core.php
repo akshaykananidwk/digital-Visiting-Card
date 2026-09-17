@@ -4,9 +4,12 @@
  * compose this so that content stays identical across every design.
  *
  * @var App\Services\CardPresenter $card
+ * @var App\Services\TemplateRenderer|null $design
  */
 $profile = $card->image('profile_image');
 $logo = $card->image('logo_image');
+// The design's trade mark, so the badge reads as the trade and not just text.
+$motif = isset($design) && $design instanceof App\Services\TemplateRenderer ? $design->motif() : '';
 ?>
 <div class="dvc-avatar-wrap">
     <?php if ($profile !== null): ?>
@@ -30,7 +33,10 @@ $logo = $card->image('logo_image');
         <p class="dvc-business"><?= e((string) $card->get('business_name')) ?></p>
     <?php endif; ?>
     <?php if ($card->has('business_category')): ?>
-        <span class="dvc-category"><?= e((string) $card->get('business_category')) ?></span>
+        <span class="dvc-category">
+            <?php if ($motif !== ''): ?><?= icon($motif, 13) ?><?php endif; ?>
+            <?= e((string) $card->get('business_category')) ?>
+        </span>
     <?php endif; ?>
     <?php $open = $card->openState(); ?>
     <?php if ($open !== null): ?>

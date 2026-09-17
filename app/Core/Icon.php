@@ -11,6 +11,51 @@ namespace App\Core;
 final class Icon
 {
     private const PATHS = [
+        // ------------------------------------------------ Trade motifs --
+        // Industry marks. A card that shows a fork over a warm gradient is
+        // read as a restaurant before a word of it is scanned, which is what
+        // a visiting card is for. Drawn on the same 24x24 stroke grid as the
+        // interface icons so they sit consistently.
+        'utensils'    => '<path d="M4 2v7a3 3 0 0 0 3 3v10"/><path d="M7 2v7"/><path d="M10 2v7a3 3 0 0 1-3 3"/><path d="M17 2c-1.7 1.4-2.5 3.3-2.5 5.5 0 2.2.8 4.1 2.5 5.5v9"/>',
+        'chef'        => '<path d="M6 13a4 4 0 1 1 1.6-7.7 4.5 4.5 0 0 1 8.8 0A4 4 0 1 1 18 13z"/><path d="M6 13v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-6"/><path d="M9 17h6"/>',
+        'cup'         => '<path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 9h2a2 2 0 0 1 0 5h-2"/><path d="M5 21h12"/>',
+        'scissors'    => '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.1" y2="15.9"/><line x1="14.5" y1="14.5" x2="20" y2="20"/><line x1="8.1" y1="8.1" x2="12" y2="12"/>',
+        'stethoscope' => '<path d="M5 3v5a4 4 0 0 0 8 0V3"/><path d="M5 3H3"/><path d="M13 3h2"/><path d="M9 12v3a5 5 0 0 0 5 5h1"/><circle cx="18" cy="19" r="3"/>',
+        'tooth'       => '<path d="M12 3c-2 0-3 1-4.5 1S5 3.2 4 4.5C2.8 6 3 8.5 3.6 11c.6 2.4.9 4.6 1.2 6.6.2 1.6.6 3.4 1.9 3.4 1.2 0 1.6-1.6 1.9-3.2.3-1.6.6-3.3 1.4-3.3s1.1 1.7 1.4 3.3c.3 1.6.7 3.2 1.9 3.2 1.3 0 1.7-1.8 1.9-3.4.3-2 .6-4.2 1.2-6.6.6-2.5.8-5-.4-6.5C17.5 3.2 16.5 4 15 4s-1-1-3-1z"/>',
+        'camera'      => '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+        'cctv'        => '<path d="M3 7l14-4 2 6-14 4z"/><path d="M5.5 13.5 4 19"/><path d="M2 19h6"/><path d="M17 9l4 1.5a2 2 0 0 1 1 2.5"/>',
+        'monitor'     => '<rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 16v5"/>',
+        'wrench'      => '<path d="M14.7 6.3a4 4 0 1 0 5 5L21 21l-2 2-9.7-9.7a4 4 0 0 1-5-5z"/>',
+        'hammer'      => '<path d="M14 5 9 10l-6 6 3 3 6-6 5-5"/><path d="M13 4l4-2 5 5-2 4z"/>',
+        'droplet'     => '<path d="M12 2.7 6.5 9a7.5 7.5 0 1 0 11 0z"/>',
+        'paint'       => '<rect x="3" y="3" width="18" height="6" rx="2"/><path d="M12 9v4a2 2 0 0 0 2 2h1v6h-6v-6h1a2 2 0 0 0 2-2"/>',
+        'brick'       => '<rect x="2" y="4" width="20" height="5"/><rect x="2" y="10" width="20" height="5"/><rect x="2" y="16" width="20" height="5"/><path d="M8 4v5M16 10v5M8 16v5"/>',
+        'graduation'  => '<path d="M22 9 12 4 2 9l10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/>',
+        'scale'       => '<path d="M12 3v18"/><path d="M6 21h12"/><path d="M4 8h16"/><path d="M4 8 2 14h4z"/><path d="M20 8l-2 6h4z"/>',
+        'chart-up'    => '<path d="M3 21h18"/><polyline points="4 16 9 11 13 15 20 8"/><polyline points="20 12 20 8 16 8"/>',
+        'car'         => '<path d="M5 17h14"/><path d="M3 12h18l-2-5H5z"/><path d="M3 12v4h18v-4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>',
+        'truck'       => '<path d="M1 7h12v9H1z"/><path d="M13 10h5l3 3v3h-8z"/><circle cx="5" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+        'plane'       => '<path d="M2 13l20-7-7 20-3-8z"/><path d="M12 18l-2 4"/>',
+        'bed'         => '<path d="M2 18V9h10a5 5 0 0 1 5 5v4"/><path d="M2 18h20"/><path d="M17 14h5v4"/><circle cx="7" cy="12" r="2"/>',
+        'shopping'    => '<path d="M6 8h12l-1 12H7z"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/>',
+        'shirt'       => '<path d="M8 3 4 6v5h3v10h10V11h3V6l-4-3-4 3z"/>',
+        'gem'         => '<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18"/><path d="M9 3l3 6 3-6"/>',
+        'ring'        => '<circle cx="12" cy="15" r="6"/><path d="M9 6h6l-3 3z"/><path d="M9 6l3-3 3 3"/>',
+        'dumbbell'    => '<path d="M6 8v8"/><path d="M18 8v8"/><path d="M3 10v4"/><path d="M21 10v4"/><path d="M6 12h12"/>',
+        'flower'      => '<circle cx="12" cy="9" r="2.5"/><path d="M12 6.5a2.5 2.5 0 1 1 0-1"/><path d="M12 9c-3 0-5-1.5-5-3.5S9 3 12 3s5 .5 5 2.5S15 9 12 9z"/><path d="M12 11v10"/><path d="M12 16c2 0 4-1 5-3"/>',
+        'leaf'        => '<path d="M20 4C10 4 4 9 4 17c0 1 .2 2 .5 3C7 13 13 9 20 9z"/><path d="M4.5 20C8 14 13 11 20 10"/>',
+        'palette'     => '<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-.7-2-.7-3 .8-2 2.2-2H19a3 3 0 0 0 3-3 9 9 0 0 0-10-8z"/><circle cx="8" cy="9" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="7" cy="14" r="1"/>',
+        'mic'         => '<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4"/><path d="M9 21h6"/>',
+        'book'        => '<path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/>',
+        'printer'     => '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="7" rx="2"/><path d="M7 16h10v5H7z"/>',
+        'pill'        => '<path d="M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7z"/><path d="M7 7l10 10"/>',
+        'paw'         => '<circle cx="7" cy="8" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="17" cy="8" r="2"/><path d="M12 11c-3 0-5 2-5 4.5S9 21 12 21s5-3 5-5.5S15 11 12 11z"/>',
+        'diya'        => '<path d="M4 15h16a8 8 0 0 1-16 0z"/><path d="M12 12c1.5-1 2-2 2-3.5S13 6 12 5c-1 1-2 2-2 3.5S10.5 11 12 11z"/><path d="M6 19h12"/>',
+        'temple'      => '<path d="M12 2 4 8h16z"/><path d="M6 8v11"/><path d="M18 8v11"/><path d="M3 19h18"/><path d="M10 19v-6h4v6"/>',
+        'crop'        => '<path d="M4 20 20 4"/><path d="M8 4h8a4 4 0 0 1 4 4v8"/><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/>',
+        'bolt-wire'   => '<path d="M13 2 6 13h5l-1 9 8-12h-5z"/>',
+        'briefcase-md'=> '<rect x="2" y="7" width="20" height="13" rx="2"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/><path d="M2 13h20"/>',
+
         'phone'       => '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
         'whatsapp'    => '<path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M20.52 3.48A11.9 11.9 0 0 0 12.05 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.6 5.95L0 24l6.3-1.65a11.86 11.86 0 0 0 5.74 1.46h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.17-3.42-8.44zM12.05 21.8h-.01a9.86 9.86 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.64-.24-.37a9.86 9.86 0 0 1-1.51-5.29c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.44 9.9-9.89 9.9z"/>',
         'mail'        => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
@@ -92,6 +137,12 @@ final class Icon
         'lock'        => '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
         'key'         => '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3"/>',
     ];
+
+    /** Whether the set contains this icon. */
+    public static function has(string $name): bool
+    {
+        return array_key_exists($name, self::PATHS);
+    }
 
     public static function render(string $name, int $size = 20, string $class = '', string $stroke = '2'): string
     {

@@ -110,10 +110,13 @@ const bad = m => { console.log('  FAIL  ' + m); fail++; };
           if (r.left < -500) return;                                  // deliberately off-screen skip links
           if (getComputedStyle(el).position === 'fixed') return;      // fixed bars are sized to the viewport
           if (r.right <= w + 1) return;
+          // An element inside an ancestor that scrolls or clips cannot push
+          // the page sideways: a contact row scrolls on purpose, and a
+          // decorative motif that overhangs its cover is clipped by it.
           let node = el.parentElement;
-          while (node && node !== document.body) {                    // inside a deliberate scroller?
+          while (node && node !== document.body) {
             const ox = getComputedStyle(node).overflowX;
-            if (ox === 'auto' || ox === 'scroll') return;
+            if (ox === 'auto' || ox === 'scroll' || ox === 'hidden' || ox === 'clip') return;
             node = node.parentElement;
           }
           const cls = (typeof el.className === 'string' && el.className) ? '.' + el.className.trim().split(/\s+/)[0] : '';

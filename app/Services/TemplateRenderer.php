@@ -95,6 +95,7 @@ final class TemplateRenderer
             'effects'       => [],
             'cover_height'  => 190,
             'shadow'        => 'soft',
+            'motif'         => '',
         ];
     }
 
@@ -128,6 +129,10 @@ final class TemplateRenderer
         $merged['shadow'] = in_array((string) $merged['shadow'], ['none', 'soft', 'strong'], true) ? (string) $merged['shadow'] : 'soft';
         $merged['cover_height'] = max(0, min(420, (int) $merged['cover_height']));
         $merged['effects'] = self::sanitiseEffects($merged['effects'] ?? []);
+        // Only a name the icon set actually knows; anything else is dropped
+        // rather than rendered as an empty box.
+        $motif = (string) ($merged['motif'] ?? '');
+        $merged['motif'] = ($motif !== '' && \App\Core\Icon::has($motif)) ? $motif : '';
 
         return $merged;
     }
@@ -211,6 +216,12 @@ final class TemplateRenderer
 
     // ------------------------------------------------------------ Output --
 
+    /** The trade mark for this design, or an empty string for none. */
+    public function motif(): string
+    {
+        return (string) ($this->config['motif'] ?? '');
+    }
+
     public function layout(): string
     {
         return $this->layout;
@@ -259,7 +270,11 @@ final class TemplateRenderer
             '--c-surface'      => $palette['surface'],
             '--c-surface-2'    => self::mix((string) $palette['surface'], (string) $palette['bg'], 0.5),
             '--c-text'         => $palette['text'],
-            '--c-muted'        => $palette['muted'],
+            // Secondary text. A palette's muted tone is picked by eye against
+            // a white mock-up and then used on every surface the design has,
+            // where it can fall to 2.5:1. It exists only to be read, so it is
+            // corrected to stay legible rather than trusted as given.
+            '--c-muted'        => self::onSurface((string) $palette['muted'], (string) $palette['surface'], 4.3),
             '--c-border'       => $palette['border'],
             // The label on a filled primary button. A palette may declare
             // this, but white is not legible on every primary, so an unusable
