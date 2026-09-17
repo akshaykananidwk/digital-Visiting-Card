@@ -128,5 +128,44 @@ if (is_file($userIni)) {
     }
 }
 
+// A route whose first path segment is also a real directory is served by
+// Apache as that directory, never reaching the front controller. With no
+// index.php inside and directory listings off, the visitor gets 403 and the
+// route is simply unreachable -- which is what happened to /install, whose
+// directory holds the installation marker and a readme.
+$router = new App\Core\Router();
+(static function (App\Core\Router $router): void {
+    require CONFIG_PATH . '/routes.php';
+})($router);
+
+$reflection = new ReflectionObject($router);
+$property = $reflection->getProperty('routes');
+$property->setAccessible(true);
+
+$segments = [];
+foreach ($property->getValue($router) as $routes) {
+    foreach ($routes as $route) {
+        $first = strtok(ltrim((string) $route['pattern'], '/'), '/');
+        if ($first === false || $first === '' || str_contains($first, '{')) {
+            continue;
+        }
+        $segments[$first] = true;
+    }
+}
+
+$shadowed = array_values(array_filter(array_keys($segments), static fn (string $s): bool => is_dir(BASE_PATH . '/' . $s)));
+
+// The rewrite must hand directories to the front controller, so a shadowed
+// route still works. Confirm the rule that does it is present and that no
+// directory short-circuit remains.
+$root = (string) file_get_contents(BASE_PATH . '/.htaccess');
+preg_match('/^\s*RewriteCond\s+%\{REQUEST_FILENAME\}\s+-d/mi', $root) === 0
+    ? $ok('the rewrite does not short-circuit directory requests')
+    : $no('the rewrite serves directories as-is, so any route sharing a directory name returns 403');
+
+if ($shadowed !== []) {
+    $ok('routes sharing a directory name (' . implode(', ', $shadowed) . ') rely on that, and it holds');
+}
+
 echo "\nRESULT: {$pass} passed, {$fail} failed\n";
 exit($fail === 0 ? 0 : 1);

@@ -208,6 +208,33 @@ PHP limits on the setups where `php_value` is unavailable. `tests/htaccess.php`
 is a static check that needs no server, which is the point: it fails on exactly
 the line that took the deployment down.
 
+### The installer was unreachable: 403 on /install
+
+Reported from the same deployment once the 500 was cleared. The rewrite served
+any path that matched a real directory as that directory rather than routing
+it, and `install/` exists on disk -- it holds the installation marker, and the
+readme ships with it. With no `index.php` inside and directory listings off,
+Apache answered 403, so the installation wizard could not be opened at all on
+a fresh server. Apache's log named it:
+
+```
+AH01276: Cannot serve directory .../install/: No matching DirectoryIndex
+(index.php) found, and server-generated directory index forbidden by Options
+```
+
+Only real files bypass the front controller now; directories are routes.
+`DirectorySlash` is off as well, since a request for a route matching a
+directory was being answered with a permanent redirect that browsers cache.
+Dotfiles and stray documentation are refused outright, which also closes the
+small disclosure of `install/.installed` (it records the install date, version
+and PHP version); `.well-known` stays reachable so certificate renewal keeps
+working.
+
+Verified by removing the installation lock to reproduce a fresh server: `/`
+redirects to `/install`, the wizard renders, and the requirements step runs.
+`tests/htaccess.php` now also fails if the rewrite ever short-circuits
+directory requests again.
+
 ### Unreadable .env reported as a database failure
 
 Once the server was serving again, the next failure was

@@ -5,7 +5,16 @@
 <IfModule mod_autoindex.c>
     Options -Indexes
 </IfModule>
-DirectoryIndex index.php
+
+<IfModule mod_dir.c>
+    DirectoryIndex index.php
+
+    # Without this, a request for a path that happens to match a real
+    # directory is answered with a permanent redirect adding a trailing
+    # slash -- and browsers cache that forever. Directories are routes here,
+    # not browsable locations, so there is nothing to redirect to.
+    DirectorySlash Off
+</IfModule>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -19,9 +28,17 @@ DirectoryIndex index.php
     RewriteRule ^(app|config|database|storage|bin|vendor)/ - [F,L]
     RewriteRule ^(\.env|\.env\..*|\.user\.ini|composer\.(json|lock))$ - [F,L]
 
-    # --- Serve real files / directories as-is -----------------------------
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
+    # --- Block dotfiles and stray documentation ---------------------------
+    # .well-known stays reachable so certificate renewal keeps working.
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+    RewriteRule \.(?i:md|markdown|sql|log|bak|dist|example|lock)$ - [F,L]
+
+    # --- Serve real files as-is -------------------------------------------
+    # Only files. A directory that happens to share a name with a route --
+    # install/ holds its marker file and a readme -- would otherwise be
+    # served as a directory, and with no index.php inside and indexes off
+    # Apache answers 403 instead of letting the route run.
+    RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
     # --- Everything else goes through the front controller ----------------
