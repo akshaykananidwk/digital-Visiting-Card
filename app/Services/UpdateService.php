@@ -39,6 +39,20 @@ final class UpdateService
         'robots.custom.txt',
     ];
 
+    /**
+     * Files shipped with the platform but owned by the server once they are
+     * there: written when missing, never replaced.
+     *
+     * .user.ini carries the PHP limits on hosts where PHP is not an Apache
+     * module, so a server that does not have it needs to receive it. But it
+     * is also a file control panels manage: cPanel sets it immutable so a
+     * site cannot override the PHP settings it hands out, and an update that
+     * insisted on replacing it failed outright and rolled back.
+     */
+    public const SEED_ONLY = [
+        '.user.ini',
+    ];
+
     private UpdateLog $logs;
 
     private GitHubClient $github;
@@ -503,6 +517,37 @@ final class UpdateService
      * @param array<int,string> $protected
      * @return array{written:int,skipped:int}
      */
+    /**
+     * Why a file could not be replaced, in terms the operator can act on.
+     * The directory is writable -- the new copy was created there -- so the
+     * obstacle is the existing file itself.
+     */
+    private static function describeWriteFailure(string $target): string
+    {
+        if (!file_exists($target)) {
+            return 'The file could not be created; check that ' . dirname($target) . ' is writable.';
+        }
+
+        $owner = 'unknown';
+        if (function_exists('posix_getpwuid') && function_exists('fileowner')) {
+            $owner = posix_getpwuid((int) fileowner($target))['name'] ?? 'unknown';
+        }
+        $runningAs = 'unknown';
+        if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+            $runningAs = posix_getpwuid(posix_geteuid())['name'] ?? 'unknown';
+        }
+        $permissions = substr(sprintf('%o', (int) @fileperms($target)), -4);
+
+        return sprintf(
+            'It is owned by "%s" with permissions %s, and PHP runs as "%s". '
+            . 'If ownership and permissions look right, the file may be locked by the hosting panel '
+            . '(cPanel marks some files immutable); remove the lock or add the path to the protected list.',
+            $owner,
+            $permissions,
+            $runningAs
+        );
+    }
+
     private function applyFiles(string $sourceRoot, array $protected): array
     {
         $written = 0;
@@ -532,6 +577,13 @@ final class UpdateService
 
             $target = BASE_PATH . '/' . $relative;
 
+            // Seeded files belong to the server once they exist.
+            if (in_array($relative, self::SEED_ONLY, true) && file_exists($target)) {
+                $skipped++;
+
+                continue;
+            }
+
             if ($item->isDir()) {
                 if (!is_dir($target) && !@mkdir($target, 0755, true) && !is_dir($target)) {
                     throw new RuntimeException('Could not create directory: ' . $relative);
@@ -552,7 +604,10 @@ final class UpdateService
             }
             if (!@rename($temp, $target)) {
                 @unlink($temp);
-                throw new RuntimeException('Could not replace ' . $relative . '.');
+
+                throw new RuntimeException(
+                    'Could not replace ' . $relative . '. ' . self::describeWriteFailure($target)
+                );
             }
             @chmod($target, 0644);
             $written++;

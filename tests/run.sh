@@ -36,6 +36,7 @@ run "Stored XSS"             php tests/xss.php
 run "Payments"                php tests/payments.php
 run "Webhooks"                php tests/webhooks.php
 run "QR encoder"              php tests/qr.php
+run "Updater file handling"   php tests/updater.php
 run "Health check"            php bin/console.php health
 
 if command -v node >/dev/null 2>&1 && [ -d node_modules/playwright-core ] || [ -n "${CHROMIUM_PATH:-}" ]; then

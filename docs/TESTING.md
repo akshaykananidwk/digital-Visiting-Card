@@ -344,6 +344,25 @@ translucent button was scored against a colour that is never painted. It now
 composites alpha, which is what turned the bold layout's buttons from a
 plausible-looking number into the failure they were.
 
+### An update could be blocked by a file the host owns
+
+Reported from the live site: the update failed with "Could not replace
+`.user.ini`" and rolled back. The rollback worked, so the site stayed up, but
+no release could be installed.
+
+`.user.ini` is shipped with the platform because it carries the PHP limits on
+hosts where PHP is not an Apache module. It is also a file control panels
+manage: cPanel marks it immutable precisely so a site cannot override the PHP
+settings it hands out. The updater copied the new version alongside it
+successfully and then failed to rename over it, which is the signature of a
+locked file rather than a permissions problem.
+
+Such files now form a third category beside "protected" and "replaceable":
+written when missing, never replaced once the server has them. A failed
+replace also reports the file's owner, its permissions and the user PHP runs
+as, instead of only saying it could not be done. `tests/updater.php` covers
+both halves and fails on the original behaviour.
+
 ## Known limitation
 
 The WhatsApp action button uses WhatsApp's brand green with white text, which
