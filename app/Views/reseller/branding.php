@@ -1,7 +1,7 @@
 <?php /** @var array<string,mixed> $reseller @var string $verifyHost @var string $targetHost */
 $__view->extend('layouts.panel'); ?>
 <?php $__view->start('content'); ?>
-<div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,380px);align-items:start">
+<div class="grid grid-aside-lg" style="align-items:start">
     <form method="post" action="<?= e(url_path('reseller/branding')) ?>" enctype="multipart/form-data" class="card">
         <?= csrf_field() ?>
         <div class="card-header"><h2>Your brand</h2></div>

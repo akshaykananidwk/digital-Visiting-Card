@@ -42,6 +42,8 @@ falls back to structural assertions, and says so in its output.
 | `webhooks.php` | Webhook signature verification and idempotent settlement, including replays |
 | `qr.php` | Encoding at every error-correction level, a sweep across symbol versions 1–40, and decoding each result back to the exact payload with an external scanner |
 | `browser/responsive.js` | Nine pages at six viewports: horizontal overflow, 40px minimum tap targets, console errors, and that authenticated pages really render instead of bouncing to the sign-in form |
+| `browser/mobile.js` | Every route the app answers, opened on a 360px phone as each role: the page must not scroll sideways and no control may be squeezed too narrow to use. Walks the real route table and refuses to measure a page it did not actually reach |
+| `browser/card-designs.js` | A design per layout, with and without the entrance animation, opened with JavaScript enabled **and disabled**: content must be visible either way, and button labels must be readable against the colours the palette produced |
 | `browser/framing.js` | That design-gallery and live-editor previews load inside their iframes under the site's framing policy |
 
 `php bin/console.php health` is the twelve-point runtime check (PHP version and

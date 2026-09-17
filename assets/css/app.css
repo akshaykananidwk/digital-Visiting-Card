@@ -104,6 +104,16 @@ pre { background: var(--surface-2); padding: 14px; border-radius: var(--radius-s
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+/* Two-column page layouts. These were written inline on each page, which no
+   media query could override, so they never collapsed on a phone: the main
+   column was squeezed to nothing and its form fields with it. */
+.grid-split       { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; }
+.grid-aside       { grid-template-columns: minmax(0, 1fr) minmax(0, 320px); align-items: start; }
+.grid-aside-lg    { grid-template-columns: minmax(0, 1fr) minmax(0, 380px); align-items: start; }
+.grid-aside-start { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); align-items: start; }
+.grid-hero        { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: 40px; }
+.grid-thumbs      { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .muted { color: var(--muted); }
@@ -448,7 +458,10 @@ table.table tbody tr:last-child td { border-bottom: 0; }
   padding: 0 20px; background: var(--surface); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 70;
 }
-.topbar h1 { font-size: 1.08rem; margin: 0; }
+.topbar h1 { font-size: 1.08rem; margin: 0; min-width: 0; }
+/* Without min-width:0 the truncating title keeps its full text width in the
+   flex row and shoulders the buttons off the right edge of a phone. */
+.topbar > * { min-width: 0; }
 .content { padding: 22px 20px 64px; flex: 1; }
 .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
 .page-head h1 { margin: 0 0 4px; font-size: 1.5rem; }
@@ -485,10 +498,13 @@ table.table tbody tr:last-child td { border-bottom: 0; }
 .impersonation-bar .btn { --btn-bg: rgba(255,255,255,.22); --btn-fg: #fff; min-height: 32px; padding: 5px 12px; }
 
 /* -------------------------------------------------------------- Editor -- */
-.editor { display: grid; grid-template-columns: 1fr 380px; gap: 20px; align-items: start; }
+.editor { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
+/* A grid child is min-width:auto by default, so a wide tab strip inside it
+   stretches its own column past the screen instead of scrolling. */
+.editor > * { min-width: 0; }
 .editor-preview { position: sticky; top: calc(var(--header-h) + 16px); }
 .editor-preview .phone-frame { width: 100%; max-width: 330px; }
-@media (max-width: 1100px) { .editor { grid-template-columns: 1fr; } .editor-preview { position: static; order: -1; } }
+@media (max-width: 1100px) { .editor { grid-template-columns: minmax(0, 1fr); } .editor-preview { position: static; order: -1; } }
 
 .upload-zone {
   border: 2px dashed var(--border-strong); border-radius: var(--radius);
@@ -578,4 +594,66 @@ table.table tbody tr:last-child td { border-bottom: 0; }
   .btn-sm { min-height: 44px; padding: 10px 14px; }
   .impersonation-bar .btn { min-height: 44px; padding: 10px 14px; }
   .btn, .form-control, .input, select, textarea { min-height: 44px; }
+}
+
+
+/* ======================================================================
+   Phones
+   ----------------------------------------------------------------------
+   The stylesheet previously stopped at 900px, so a 360px phone was served
+   the desktop layout: two-column pages kept both columns, which squeezed
+   form fields down to a few pixels, and wide panels pushed the page
+   sideways. Everything below is about making a narrow screen the normal
+   case rather than an afterthought.
+   ====================================================================== */
+@media (max-width: 720px) {
+  /* Every two-column page layout becomes one column. */
+  .grid-split,
+  .grid-aside,
+  .grid-aside-lg,
+  .grid-aside-start,
+  .grid-hero,
+  .grid-2,
+  .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .grid-hero { gap: 24px; }
+  .grid-4 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+
+  /* A grid or flex child refuses to shrink below its content unless told
+     otherwise, which is what pushed panels past the viewport edge. */
+  .grid > *, .row > *, .editor > *, .main, .content { min-width: 0; }
+  .card, .card-body, .panel, form { max-width: 100%; }
+
+  /* Wide data tables scroll inside their own panel, never the page. */
+  .card-body, .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table { min-width: 520px; }
+
+  /* Inline admin forms stack instead of competing for a few pixels each. */
+  .row { flex-direction: column; align-items: stretch; }
+  .row > .btn, .row > .input, .row > .select { width: 100%; }
+
+  /* No control should end up too narrow to use. */
+  .input, .select, textarea { min-width: 0; width: 100%; }
+  .input-group { flex-wrap: wrap; }
+  .input-group .addon {
+    flex: 1 1 100%; border-radius: 10px 10px 0 0; border-right: 1px solid var(--border-strong);
+    font-size: .75rem; padding: 6px 10px;
+  }
+  .input-group .addon + .input { border-radius: 0 0 10px 10px; width: 100%; }
+
+  /* Tab strips scroll horizontally on their own. */
+  .tabs { min-width: 0; max-width: 100%; }
+
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  .topbar { padding: 0 12px; gap: 8px; }
+  .topbar h1 { font-size: .98rem; }
+  .content { padding: 18px 14px 84px; }
+  .card-body { padding: 16px; }
+  .page-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+@media (max-width: 420px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card-body { padding: 14px; }
+  .btn { padding: 11px 16px; }
 }

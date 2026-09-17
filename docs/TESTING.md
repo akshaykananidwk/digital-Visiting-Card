@@ -15,6 +15,8 @@ be re-run (`tests/run.sh`). Nothing here is a manual observation.
 | Security headers and access control (`tests/security-headers.sh`) | 18 / 18 |
 | Stored XSS on the public card (`tests/xss.php`) | 8 / 8 |
 | `.htaccess` portability (`tests/htaccess.php`) | 19 / 19 |
+| Mobile layout, every route at 360px (`tests/browser/mobile.js`) | 169 page loads, 0 problems |
+| Card designs render (`tests/browser/card-designs.js`) | 24 designs, JS on and off |
 | Payments (`tests/payments.php`) | 30 / 30 |
 | Webhooks (`tests/webhooks.php`) | 9 / 9 |
 | QR encoder (`tests/qr.php`) | 61 / 61 |
@@ -257,7 +259,63 @@ every page was frameable by same-origin, although the application had decided
 `DENY` for all but the pages meant to be embedded. Those headers now apply only
 to static files that Apache serves without going through the application.
 
+### Designs using the entrance animation rendered blank
+
+The most serious of this round. Card sections start at `opacity: 0` and are
+revealed by an IntersectionObserver, so any design using that effect showed an
+empty page wherever the reveal never ran: the design gallery previews load no
+script at all, and a real card whose script failed to load behaved the same.
+194 of the 1,200 designs use the effect, so roughly one design in six appeared
+blank when a customer browsed the catalogue.
+
+The hidden start state is now gated behind a class the page sets only when
+scripting is available to undo it, set before first paint so the animation
+still plays with no flash. `tests/browser/card-designs.js` opens a design per
+layout with JavaScript enabled and disabled; with the gate removed it fails on
+12 of 24 designs.
+
+### The panel was unusable on a phone
+
+Reported from a real phone after registering. The stylesheet's narrowest
+breakpoint was 900px, so a 360px screen was served the desktop layout, and
+fifteen pages set their two-column grid as an inline style, which no media
+query can override. The main column collapsed: the reseller branding form
+rendered its inputs 28px wide, the design page 51px, the slug field 79px. Five
+pages scrolled sideways, among them the card editor, where a grid child at its
+default `min-width: auto` stretched its own column to 583px inside a 360px
+screen.
+
+Those layouts are now classes rather than inline styles, there is a phone
+breakpoint that collapses them, and grid children are told they may shrink.
+
+The responsive suite had reported 162/162 throughout. It checked nine
+hand-listed pages and counted a redirect to the sign-in form as a pass, so
+with registration and login failing it had been measuring the login screen.
+`tests/browser/mobile.js` replaces that approach: it walks the application's
+own route table, signs in as each role, skips any page it did not actually
+reach, and fails on a page that scrolls sideways or on a control too narrow
+to use.
+
+### Button labels that could not be read
+
+Measured across a sample of designs: 196 action buttons fell below 4.5:1,
+including an outlined button whose label was navy on a navy dark theme at
+1.93:1. A palette's primary is chosen to sit under white text on a filled
+button; used as text itself it can land on top of its own background, and
+`on_primary` was taken on trust even where white was illegible. Both are now
+derived: the brand hue is shifted until it clears the ratio on the card
+surface, and a filled button's label is whichever of light or dark actually
+reads. That removed every failure except the WhatsApp button, which keeps the
+vendor's own brand green and is excluded deliberately.
+
 ## Known limitation
+
+The WhatsApp action button uses WhatsApp's brand green with white text, which
+measures 1.98:1. That is the treatment WhatsApp's own brand guidance specifies
+and what visitors recognise, so it is left as it is rather than quietly
+restyled; dark text on the same green would measure 9:1 if readability is
+preferred to brand fidelity. The design suite excludes it explicitly rather
+than silently passing it.
 
 OpenCV's QR detector fails to read a small fraction of otherwise-valid symbols
 (16 of the 480 in the sweep) at certain mask patterns, while `zbarimg` reads all

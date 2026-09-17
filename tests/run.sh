@@ -39,7 +39,11 @@ run "QR encoder"              php tests/qr.php
 run "Health check"            php bin/console.php health
 
 if command -v node >/dev/null 2>&1 && [ -d node_modules/playwright-core ] || [ -n "${CHROMIUM_PATH:-}" ]; then
+    php tests/routes-export.php > "${TMPDIR:-/tmp}/dvc-routes.json" 2>/dev/null
+    php tests/design-sample.php > "${TMPDIR:-/tmp}/dvc-designs.json" 2>/dev/null
     run "Responsive layout" node tests/browser/responsive.js
+    run "Mobile layout"     node tests/browser/mobile.js
+    run "Card designs"      node tests/browser/card-designs.js
     run "Preview framing"   node tests/browser/framing.js
 else
     echo

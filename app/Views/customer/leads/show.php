@@ -4,7 +4,7 @@
 <?php $__view->stop(); ?>
 
 <?php $__view->start('content'); ?>
-<div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
+<div class="grid grid-split" style="align-items:start">
     <div class="card">
         <div class="card-header">
             <h2><?= e((string) $lead['name']) ?></h2>

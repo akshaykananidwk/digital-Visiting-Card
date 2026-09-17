@@ -17,7 +17,7 @@ $resellerId = (int) $reseller['id'];
     <div class="stat"><div class="stat-label">Total sales</div><div class="stat-value" style="font-size:1.35rem"><?= e(money((float) $reseller['total_sales'])) ?></div></div>
 </div>
 
-<div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
+<div class="grid grid-split" style="align-items:start">
     <div class="stack">
         <form method="post" action="<?= e(url_path('admin/resellers/' . $resellerId)) ?>" class="card">
             <?= csrf_field() ?>

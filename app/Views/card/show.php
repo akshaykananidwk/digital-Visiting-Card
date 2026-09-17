@@ -49,6 +49,10 @@ $seoImage = $card->seoImage();
 <style>:root{<?= $design->cssVariables() ?>}</style>
 
 <script type="application/ld+json"><?= json_script($card->structuredData()) ?></script>
+<script>/* Marks that scripting is available, before first paint, so the
+     entrance animation can start hidden without risking a card that stays
+     invisible when the script does not run. */
+    document.documentElement.className += ' dvc-js';</script>
 </head>
 <body>
 <div class="<?= e($design->bodyClasses()) ?>"

@@ -61,7 +61,7 @@ $__view->extend('layouts.panel');
     <?php endforeach; ?>
 </div>
 
-<div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr)">
+<div class="grid grid-split">
     <div class="card">
         <div class="card-header"><h2>Views — last 30 days</h2></div>
         <div class="card-body">

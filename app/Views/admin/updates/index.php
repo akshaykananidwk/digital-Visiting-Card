@@ -30,7 +30,7 @@ $__view->extend('layouts.admin');
     <div class="stat"><div class="stat-label">Last updated</div><div class="stat-value" style="font-size:1rem"><?= e($lastUpdate !== '' ? date('d M, H:i', strtotime($lastUpdate)) : 'Never') ?></div></div>
 </div>
 
-<div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,360px);align-items:start">
+<div class="grid grid-aside-lg" style="align-items:start">
     <div class="stack">
         <div class="card">
             <div class="card-header"><h2>Install an update</h2>

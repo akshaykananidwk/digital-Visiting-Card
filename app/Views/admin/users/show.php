@@ -20,7 +20,7 @@ $userId = (int) $user['id'];
     <div class="alert alert-warning"><?= icon('lock', 18) ?><div>This account has the same or a higher role than yours, so it is read-only for you.</div></div>
 <?php endif; ?>
 
-<div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
+<div class="grid grid-split" style="align-items:start">
     <div class="stack">
         <form method="post" action="<?= e(url_path('admin/users/' . $userId)) ?>" class="card">
             <?= csrf_field() ?>

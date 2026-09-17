@@ -12,8 +12,8 @@ $logo = $card->image('logo_image');
     <?php if ($profile !== null): ?>
         <img class="dvc-avatar" src="<?= e($profile) ?>" alt="<?= e($card->displayName()) ?>" width="128" height="128" fetchpriority="high">
     <?php else: ?>
-        <div class="dvc-avatar" style="display:grid;place-items:center;font-size:2.4rem;font-weight:800;color:var(--c-primary);background:var(--c-primary-soft)">
-            <?= e(mb_strtoupper(mb_substr($card->displayName(), 0, 1))) ?>
+        <div class="dvc-avatar dvc-avatar-initials" aria-label="<?= e($card->displayName()) ?>">
+            <span><?= e($card->initials()) ?></span>
         </div>
     <?php endif; ?>
     <?php if ($logo !== null): ?>

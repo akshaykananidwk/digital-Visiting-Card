@@ -91,6 +91,38 @@ final class CardPresenter
         return Url::card((string) $this->card['slug']);
     }
 
+    /**
+     * Up to two initials for the avatar placeholder. Two letters read as a
+     * monogram rather than a single stray character, which is most of the
+     * difference between a card that looks finished and one that does not
+     * when no photo has been uploaded.
+     */
+    public function initials(): string
+    {
+        $source = trim((string) ($this->get('full_name') ?? $this->get('business_name') ?? $this->get('title') ?? ''));
+        if ($source === '') {
+            return '?';
+        }
+
+        $words = preg_split('/\s+/u', $source) ?: [];
+        $letters = '';
+        foreach ($words as $word) {
+            $first = mb_substr(preg_replace('/[^\p{L}\p{N}]/u', '', $word) ?? '', 0, 1);
+            if ($first !== '') {
+                $letters .= $first;
+            }
+            if (mb_strlen($letters) === 2) {
+                break;
+            }
+        }
+
+        if ($letters === '') {
+            $letters = mb_substr($source, 0, 1);
+        }
+
+        return mb_strtoupper($letters);
+    }
+
     public function image(string $key): ?string
     {
         $value = $this->get($key);

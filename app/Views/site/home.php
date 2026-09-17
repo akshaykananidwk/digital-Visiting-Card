@@ -13,7 +13,7 @@ $__view->extend('layouts.public');
 <?php $__view->start('hero'); ?>
 <section class="hero">
     <div class="container">
-        <div class="grid" style="grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);align-items:center;gap:40px">
+        <div class="grid grid-hero" style="align-items:center;gap:40px">
             <div>
                 <span class="eyebrow"><?= icon('sparkles', 14) ?> <?= number_format((int) ($stats['templates'] ?? 0)) ?>+ ready designs</span>
                 <h1>Your business card, now a link you can WhatsApp.</h1>

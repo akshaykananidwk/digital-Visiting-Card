@@ -260,7 +260,13 @@ final class TemplateRenderer
             '--c-text'         => $palette['text'],
             '--c-muted'        => $palette['muted'],
             '--c-border'       => $palette['border'],
-            '--c-on-primary'   => $palette['on_primary'] ?? '#ffffff',
+            // The label on a filled primary button. A palette may declare
+            // this, but white is not legible on every primary, so an unusable
+            // pairing is corrected rather than trusted.
+            '--c-on-primary'   => self::onPrimary($palette),
+            // The brand hue, guaranteed legible as text on the card surface.
+            '--c-primary-readable' => self::onSurface((string) $palette['primary'], (string) $palette['surface']),
+            '--c-accent-readable'  => self::onSurface((string) $palette['accent'], (string) $palette['surface']),
             '--radius'         => $radius . 'px',
             '--radius-sm'      => max(4, (int) round($radius * 0.5)) . 'px',
             '--radius-lg'      => ($radius + 8) . 'px',
@@ -453,5 +459,54 @@ final class TemplateRenderer
     public static function readable(string $background, string $light = '#ffffff', string $dark = '#0f172a'): string
     {
         return self::contrastRatio($background, $light) >= self::contrastRatio($background, $dark) ? $light : $dark;
+    }
+
+    /**
+     * The same hue, shifted until it is legible on the given background.
+     *
+     * A palette's primary colour is chosen to look right as a filled button,
+     * where the text sits on top of it. Used as text itself -- an outlined
+     * button, a link -- it can land close to its own background: a navy
+     * primary on a navy dark theme measured under 2:1, which is unreadable.
+     * This walks the colour toward white or black, whichever the background
+     * is further from, until it clears the target ratio. The target sits a
+     * little above the 4.5:1 minimum because the surface a button actually
+     * paints on is often a shade off the palette value.
+     */
+    /**
+     * Label colour for a filled primary button.
+     *
+     * @param array<string,mixed> $palette
+     */
+    private static function onPrimary(array $palette): string
+    {
+        $primary = (string) $palette['primary'];
+        $declared = $palette['on_primary'] ?? null;
+
+        if (is_string($declared) && self::isColor($declared) && self::contrastRatio($primary, $declared) >= 4.5) {
+            return $declared;
+        }
+
+        return self::readable($primary);
+    }
+
+    public static function onSurface(string $colour, string $surface, float $target = 4.8): string
+    {
+        if (self::contrastRatio($surface, $colour) >= $target) {
+            return $colour;
+        }
+
+        // Lighten on a dark surface, darken on a light one.
+        $towardsLight = self::luminance($surface) < 0.5;
+
+        $candidate = $colour;
+        for ($step = 1; $step <= 20; $step++) {
+            $candidate = self::shade($colour, $towardsLight ? $step * 5 : -$step * 5);
+            if (self::contrastRatio($surface, $candidate) >= $target) {
+                return $candidate;
+            }
+        }
+
+        return self::readable($surface);
     }
 }

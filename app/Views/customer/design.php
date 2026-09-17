@@ -26,7 +26,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
     <div>Changing design never deletes your content — your details, services, products and gallery move to the new design automatically.</div>
 </div>
 
-<div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,320px);align-items:start">
+<div class="grid grid-aside" style="align-items:start">
     <div>
         <form method="get" action="<?= e(url_path('cards/' . $cardId . '/design')) ?>" class="card mb-3">
             <div class="card-body">

@@ -84,7 +84,7 @@ $cardId = (int) $card['id'];
     <div class="card">
         <div class="card-header"><h3 style="font-size:.98rem">Gallery items</h3></div>
         <div class="card-body">
-            <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px">
+            <div class="grid grid-thumbs" style="gap:14px">
                 <?php foreach (array_merge($images, $videos) as $item): ?>
                     <div>
                         <div style="aspect-ratio:1;border-radius:11px;overflow:hidden;border:1px solid var(--border);background:var(--surface-2);position:relative">

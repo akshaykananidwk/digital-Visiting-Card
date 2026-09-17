@@ -11,7 +11,7 @@ $__view->extend('layouts.public');
 <div class="container section" style="padding-top:32px">
     <p class="small muted"><a href="<?= e(url('templates')) ?>">&larr; All designs</a></p>
 
-    <div class="grid" style="grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:36px;align-items:start">
+    <div class="grid grid-aside-start" style="gap:36px;align-items:start">
         <div>
             <div class="phone-frame">
                 <iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="Preview of <?= e((string) $template['name']) ?>"></iframe>

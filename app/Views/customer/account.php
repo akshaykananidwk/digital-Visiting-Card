@@ -1,6 +1,6 @@
 <?php /** @var array<string,mixed> $user @var array<string,mixed> $summary */ $__view->extend('layouts.panel'); ?>
 <?php $__view->start('content'); ?>
-<div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
+<div class="grid grid-split" style="align-items:start">
     <div class="stack">
         <form method="post" action="<?= e(url_path('account/profile')) ?>" enctype="multipart/form-data" class="card">
             <?= csrf_field() ?>
