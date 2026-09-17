@@ -1,0 +1,7 @@
+# Never execute anything inside the uploads directory
+php_flag engine off
+Options -ExecCGI -Indexes
+AddType text/plain .php .php3 .php4 .php5 .php7 .php8 .phtml .pht .phar .inc .htaccess
+<FilesMatch "\.(?i:php|php3|php4|php5|php7|php8|phtml|pht|phar|inc|cgi|pl|py|sh|htaccess)$">
+    Require all denied
+</FilesMatch>

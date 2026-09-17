@@ -1,0 +1,8 @@
+*
+!.gitignore
+!.htaccess
+!logs/
+!cache/
+!backups/
+!tmp/
+!sessions/

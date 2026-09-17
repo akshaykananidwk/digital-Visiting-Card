@@ -1,0 +1,38 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Installation state
+storage/installed.lock
+storage/maintenance.flag
+install/.installed
+
+# Runtime storage
+storage/logs/*
+!storage/logs/.gitignore
+storage/cache/*
+!storage/cache/.gitignore
+storage/backups/*
+!storage/backups/.gitignore
+storage/tmp/*
+!storage/tmp/.gitignore
+storage/sessions/*
+!storage/sessions/.gitignore
+
+# User uploads
+uploads/*/**
+!uploads/*/.gitignore
+!uploads/.htaccess
+
+# Local development helpers
+router.php
+/vendor/
+node_modules/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
