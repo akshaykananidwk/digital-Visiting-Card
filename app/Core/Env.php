@@ -17,16 +17,30 @@ final class Env
 
     private static bool $loaded = false;
 
+    /** Set when .env exists but PHP was not allowed to read it. */
+    private static bool $unreadable = false;
+
     public static function load(string $path): void
     {
         self::$loaded = true;
+        self::$unreadable = false;
 
-        if (!is_file($path) || !is_readable($path)) {
+        // No file at all is the normal state before installation.
+        if (!is_file($path)) {
             return;
         }
 
-        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        // A file that exists but cannot be read is a misconfiguration, and the
+        // worst thing to do is carry on quietly: every setting would be empty
+        // and the first symptom is a database login failure for user '',
+        // which sends people hunting through database credentials that were
+        // correct all along. It happens whenever .env is chmod 600 but owned
+        // by a different user than the one PHP runs as, which is the usual
+        // arrangement on shared hosting.
+        $lines = is_readable($path) ? file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : false;
         if ($lines === false) {
+            self::$unreadable = true;
+
             return;
         }
 
@@ -88,6 +102,12 @@ final class Env
     public static function loaded(): bool
     {
         return self::$loaded;
+    }
+
+    /** True when .env is present but PHP could not read it. */
+    public static function unreadable(): bool
+    {
+        return self::$unreadable;
     }
 
     /** @return array<string,string> */

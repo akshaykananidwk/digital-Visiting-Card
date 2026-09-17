@@ -2,7 +2,9 @@
 #  Digital Visiting Card SaaS - Apache Front Controller
 # ==========================================================================
 
-Options -Indexes
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
 DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
@@ -15,7 +17,7 @@ DirectoryIndex index.php
 
     # --- Block access to sensitive directories ----------------------------
     RewriteRule ^(app|config|database|storage|bin|vendor)/ - [F,L]
-    RewriteRule ^(\.env|\.env\..*|composer\.(json|lock))$ - [F,L]
+    RewriteRule ^(\.env|\.env\..*|\.user\.ini|composer\.(json|lock))$ - [F,L]
 
     # --- Serve real files / directories as-is -----------------------------
     RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -26,12 +28,18 @@ DirectoryIndex index.php
     RewriteRule ^ index.php [L]
 </IfModule>
 
+# --- Security headers for static files ------------------------------------
+# PHP responses set their own headers, and they vary by page: the card and
+# template previews are meant to be embedded while everything else refuses
+# framing outright. "Header always set" would overwrite that decision with a
+# single value for the whole site, so these apply only to files Apache serves
+# without going through the application.
 <IfModule mod_headers.c>
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Permissions-Policy "geolocation=(self), microphone=(), camera=()"
+    <FilesMatch "\.(?i:css|js|mjs|map|png|jpe?g|gif|svg|webp|avif|ico|woff2?|ttf|otf|eot|txt|xml|json|webmanifest)$">
+        Header always set X-Content-Type-Options "nosniff"
+        Header always set Referrer-Policy "strict-origin-when-cross-origin"
+        Header always set X-Frame-Options "SAMEORIGIN"
+    </FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>
@@ -49,6 +57,24 @@ DirectoryIndex index.php
     ExpiresByType font/woff2      "access plus 1 year"
 </IfModule>
 
-php_flag display_errors off
-php_value upload_max_filesize 16M
-php_value post_max_size 20M
+# --- PHP settings ---------------------------------------------------------
+# php_flag / php_value are only understood when PHP runs as an Apache module.
+# Most hosting runs PHP as FPM, CGI or LiteSpeed, where Apache rejects these
+# directives outright and answers every request with 500 before PHP is ever
+# reached. The guards below keep them working on mod_php; everywhere else the
+# same settings come from .user.ini, which PHP reads directly.
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag display_errors off
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+</IfModule>
+<IfModule mod_php5.c>
+    php_flag display_errors off
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+</IfModule>

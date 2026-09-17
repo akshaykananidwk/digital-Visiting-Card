@@ -42,6 +42,39 @@ require APP_PATH . '/Core/helpers.php';
 // --- Environment ---------------------------------------------------------
 App\Core\Env::load(BASE_PATH . '/.env');
 
+// Stop here rather than running on with no configuration at all. Continuing
+// produces a database login failure for an empty user, which reads like wrong
+// credentials and hides the real cause: the file is there, PHP just is not
+// allowed to open it.
+if (App\Core\Env::unreadable()) {
+    $owner = function_exists('posix_getpwuid') && function_exists('fileowner')
+        ? (posix_getpwuid((int) fileowner(BASE_PATH . '/.env'))['name'] ?? 'unknown')
+        : 'unknown';
+    $runningAs = function_exists('posix_geteuid') && function_exists('posix_getpwuid')
+        ? (posix_getpwuid(posix_geteuid())['name'] ?? 'unknown')
+        : 'unknown';
+    $permissions = substr(sprintf('%o', (int) @fileperms(BASE_PATH . '/.env')), -4);
+
+    $message = 'Configuration file .env exists but cannot be read. '
+        . 'It is owned by "' . $owner . '" with permissions ' . $permissions
+        . ', and PHP is running as "' . $runningAs . '". '
+        . 'Give that user read access, for example: chown ' . $runningAs . ' .env && chmod 600 .env';
+
+    error_log('[digital-visiting-card] ' . $message);
+
+    if (PHP_SAPI === 'cli') {
+        fwrite(STDERR, $message . PHP_EOL);
+        exit(1);
+    }
+
+    http_response_code(500);
+    header('Content-Type: text/plain; charset=UTF-8');
+    echo "Configuration error\n\n";
+    echo "The application's .env file exists but this server cannot read it.\n";
+    echo "See the server error log for the owner, permissions and the user PHP runs as.\n";
+    exit;
+}
+
 // --- Error & exception handling -----------------------------------------
 App\Core\ErrorHandler::register();
 

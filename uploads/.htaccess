@@ -1,7 +1,34 @@
-# Never execute anything inside the uploads directory
-php_flag engine off
-Options -ExecCGI -Indexes
-AddType text/plain .php .php3 .php4 .php5 .php7 .php8 .phtml .pht .phar .inc .htaccess
-<FilesMatch "\.(?i:php|php3|php4|php5|php7|php8|phtml|pht|phar|inc|cgi|pl|py|sh|htaccess)$">
-    Require all denied
+# Never execute anything inside the uploads directory.
+#
+# The FilesMatch block below is the protection that matters: it works on every
+# PHP SAPI, because Apache refuses to serve the file at all. The php_flag and
+# Options lines only apply under mod_php and are guarded, since Apache answers
+# with 500 for the whole site when it meets a directive no loaded module
+# defines.
+<FilesMatch "\.(?i:php|php3|php4|php5|php7|php8|phtml|pht|phar|inc|cgi|pl|py|sh|htaccess|user\.ini)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </FilesMatch>
+
+<IfModule mod_mime.c>
+    AddType text/plain .php .php3 .php4 .php5 .php7 .php8 .phtml .pht .phar .inc
+</IfModule>
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php5.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>

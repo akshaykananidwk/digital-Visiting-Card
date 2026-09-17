@@ -14,6 +14,7 @@ be re-run (`tests/run.sh`). Nothing here is a manual observation.
 | Host and URL generation (`tests/host-urls.sh`) | 8 / 8 |
 | Security headers and access control (`tests/security-headers.sh`) | 18 / 18 |
 | Stored XSS on the public card (`tests/xss.php`) | 8 / 8 |
+| `.htaccess` portability (`tests/htaccess.php`) | 19 / 19 |
 | Payments (`tests/payments.php`) | 30 / 30 |
 | Webhooks (`tests/webhooks.php`) | 9 / 9 |
 | QR encoder (`tests/qr.php`) | 61 / 61 |
@@ -35,6 +36,7 @@ A separate pass drove the whole application rather than individual features:
 | SQL injection across 17 search, filter, sort and pagination inputs (136 requests) | no errors, no leaks, no time-based delay, no data changed |
 | Upload hardening: PHP shell, spoofed content type, double extension, polyglot, appended PHP, SVG with script, oversize | only the genuine JPEG stored, renamed and re-encoded |
 | Browser sweep: 95 routes × 3 roles (285 page loads) | no JavaScript errors, no broken assets |
+| Whole suite re-run against Apache 2.4 + PHP-FPM, not just the development server | all suites pass; protected paths, upload execution blocking and security headers verified under real Apache |
 
 Recorded during development, from suites driven against the same installation:
 customer journey 30/30, admin panel 32/32, reseller panel 18/18 (including
@@ -182,6 +184,51 @@ enter on -- so the session did not travel with them -- and a path segment was
 stripped from every route. `SCRIPT_NAME` is now used only when it names a PHP
 file; a sub-directory installation is configured through `APP_URL`, which is
 checked first.
+
+### Site returned 500 on any host where PHP is not an Apache module
+
+Reported from a live deployment: Apache's own error page, meaning the request
+failed before PHP ran. Reproduced here on Apache 2.4 with PHP-FPM, and the
+error log named it exactly:
+
+```
+Invalid command 'php_flag', perhaps misspelled or defined by a module
+not included in the server configuration
+```
+
+`php_flag` and `php_value` only exist when PHP runs as an Apache module. Under
+FPM, CGI or LiteSpeed — which is most hosting — Apache rejects them and answers
+500 for every request. The root `.htaccess` used them unguarded, so the site
+could not serve a single page. The same applied to `php_flag engine off` in
+`uploads/`, and to the Apache 2.2 `Deny from all` syntax in the protected
+directories, which fails the same way where `mod_access_compat` is not loaded.
+
+All of these now sit inside `<IfModule>` guards, and a `.user.ini` carries the
+PHP limits on the setups where `php_value` is unavailable. `tests/htaccess.php`
+is a static check that needs no server, which is the point: it fails on exactly
+the line that took the deployment down.
+
+### Unreadable .env reported as a database failure
+
+Once the server was serving again, the next failure was
+`Access denied for user ''@'localhost'`. The cause was not the database
+credentials: `.env` was present but not readable by the user PHP runs as, so
+every setting was empty. `Env::load()` treated an unreadable file the same as a
+missing one and continued silently.
+
+It now distinguishes the two and stops with a message naming the file's owner,
+its permissions, the user PHP runs as, and the command that fixes it. The
+deployment guide's instruction to `chmod 600 .env` has been corrected too: that
+is right only where PHP runs as the file's owner.
+
+### .htaccess overrode the application's framing policy
+
+Found by running the suite against Apache rather than the development server.
+`Header always set X-Frame-Options "SAMEORIGIN"` applied to every response,
+overwriting the per-page value the application sets — so on a real deployment
+every page was frameable by same-origin, although the application had decided
+`DENY` for all but the pages meant to be embedded. Those headers now apply only
+to static files that Apache serves without going through the application.
 
 ## Known limitation
 

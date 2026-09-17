@@ -45,12 +45,26 @@ public_html/
 ```
 storage/            755   (and everything inside)
 uploads/            755   (and everything inside)
-.env                600   (after installation)
+.env                600   (see the warning below)
 everything else     644 files / 755 directories
 ```
 
 In File Manager: select `storage` → Permissions → 755 → *Recurse into
 subdirectories*. Repeat for `uploads`.
+
+> **`.env` at 600 only works if PHP runs as the file's owner.** On cPanel and
+> most shared hosting that is the case, and 600 is right. Where PHP runs as a
+> separate user — `www-data` or `apache` on a VPS, for instance — 600 locks
+> PHP out of its own configuration. Use 640 with the file's group set to the
+> one PHP runs as, or give PHP ownership:
+>
+> ```bash
+> sudo chown www-data:www-data .env && sudo chmod 600 .env
+> ```
+>
+> If this is wrong, the site answers 500 and the server error log names the
+> owner, the permissions and the user PHP runs as, along with the command to
+> fix it. It never continues with empty configuration.
 
 ### Install
 
@@ -60,7 +74,7 @@ Open `https://your-domain.com/install` and follow the wizard.
 
 After the wizard finishes:
 
-1. Set `.env` to **600**.
+1. Set `.env` to **600**, keeping the ownership note above in mind.
 2. Confirm `https://your-domain.com/.env` returns **403** or **404**.
 3. Confirm `https://your-domain.com/app/bootstrap.php` returns **403**.
 4. Install SSL (cPanel → *SSL/TLS Status* → *Run AutoSSL*) and make sure
@@ -267,6 +281,9 @@ customer media or your configuration.
 | 500 on every page | Check `storage/logs/app-YYYY-MM-DD.log`. Usually a database credential or a missing PHP extension. |
 | Blank page | PHP fatal before the error handler loads — check the host's own error log and the PHP version. |
 | "The page you are looking for could not be found" on every URL | `mod_rewrite` is off or `AllowOverride` is not `All`. |
+| **Apache's own "Internal Server Error" page** (grey serif text, ending "Apache Server at ... Port 443") | Apache failed before PHP ran, nearly always over `.htaccess`. Read the server error log: cPanel → *Errors*, or `/var/log/apache2/error.log`. "Invalid command 'php_flag'" means PHP is not running as an Apache module — the shipped `.htaccess` already guards those directives, so make sure you uploaded the current one. "Invalid command 'Deny'" means `mod_access_compat` is missing, also guarded in the current files. To confirm `.htaccess` is the cause at all, rename it briefly: if the error changes, it is. |
+| A styled "Configuration error" page saying `.env` cannot be read | `.env` exists but PHP is not allowed to open it — see the ownership note under *Permissions*. The server error log names the owner, the permissions, the user PHP runs as, and the command that fixes it. |
+| "Database connection failed" straight after install | Check the credentials in `.env`. If the user shows as empty in the log, PHP could not read `.env` at all; see the row above. |
 | Styles missing | `APP_URL` does not match the address you are browsing, and that address is not covered by `APP_TRUSTED_HOSTS`. |
 | Card opens but images do not | `uploads/` permissions, or `APP_URL` uses the wrong scheme. |
 | Payments never activate a plan | Check Admin → Logs → recent webhooks, and press *Test connection* in Settings → Payments. |

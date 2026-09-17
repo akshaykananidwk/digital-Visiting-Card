@@ -30,6 +30,7 @@ run() {
 }
 
 run "Host and URL generation" bash tests/host-urls.sh
+run "htaccess portability"   php tests/htaccess.php
 run "Security headers"        bash tests/security-headers.sh
 run "Stored XSS"             php tests/xss.php
 run "Payments"                php tests/payments.php
