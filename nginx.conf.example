@@ -1,0 +1,70 @@
+# ==========================================================================
+#  Digital Visiting Card SaaS — nginx server block
+#  Place the project at /var/www/digital-card and point `root` at it.
+#  Apache users do not need this file: .htaccess already covers everything.
+# ==========================================================================
+
+server {
+    listen 443 ssl http2;
+    server_name example.com www.example.com;
+
+    root /var/www/digital-card;
+    index index.php;
+
+    ssl_certificate     /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+    client_max_body_size 20M;
+
+    # ---- Security headers (the application also sets these) --------------
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # ---- Block application internals -------------------------------------
+    location ~ ^/(app|config|database|storage|bin|vendor)/ {
+        deny all;
+        return 403;
+    }
+    location ~ /\.(env|git|htaccess) {
+        deny all;
+        return 403;
+    }
+
+    # ---- Never execute anything inside uploads ---------------------------
+    location ^~ /uploads/ {
+        location ~ \.(php\d?|phtml|phar|cgi|pl|py|sh)$ {
+            deny all;
+            return 403;
+        }
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    # ---- Static assets ----------------------------------------------------
+    location ~* \.(css|js|jpg|jpeg|png|gif|webp|svg|woff2?|ico)$ {
+        expires 30d;
+        add_header Cache-Control "public";
+        try_files $uri =404;
+    }
+
+    # ---- Front controller -------------------------------------------------
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_hide_header X-Powered-By;
+        fastcgi_read_timeout 300;
+    }
+}
+
+server {
+    listen 80;
+    server_name example.com www.example.com;
+    return 301 https://$host$request_uri;
+}

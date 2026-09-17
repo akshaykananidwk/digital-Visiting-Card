@@ -6,6 +6,13 @@
 
 declare(strict_types=1);
 
+// Refuse to run when reached directly through the web server: this file is
+// only ever included by the front controller.
+if (PHP_SAPI !== 'cli' && !defined('DVC_START') && basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === basename(__FILE__)) {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 if (!defined('APP_VERSION')) {
     define('APP_VERSION', '1.0.0');
 }

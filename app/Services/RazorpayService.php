@@ -15,8 +15,12 @@ use RuntimeException;
  * Razorpay integration built directly on the REST API (no Composer package
  * required). Payments are ALWAYS verified server side — the browser's
  * success callback alone never activates a subscription.
+ *
+ * Not final on purpose: CheckoutService takes the gateway by constructor
+ * injection, so this class can be subclassed to add another gateway or to
+ * substitute the network calls in tests.
  */
-final class RazorpayService
+class RazorpayService
 {
     private const API = 'https://api.razorpay.com/v1';
 
