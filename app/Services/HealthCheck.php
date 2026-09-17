@@ -147,10 +147,14 @@ final class HealthCheck
         try {
             $pending = (new Migrator(Database::instance()))->pending();
 
+            // A pending migration means the schema is behind the code, not
+            // that the site is down — the update pipeline fails explicitly
+            // when a migration errors, so this stays a warning. Treating it
+            // as fatal would block a rollback that actually succeeded.
             return $this->result(
                 'Database migrations',
-                $pending === [] ? 'pass' : 'fail',
-                $pending === [] ? 'Schema up to date' : count($pending) . ' migration(s) pending'
+                $pending === [] ? 'pass' : 'warn',
+                $pending === [] ? 'Schema up to date' : count($pending) . ' migration(s) pending — run them from the CLI or the updater'
             );
         } catch (Throwable $e) {
             return $this->result('Database migrations', 'fail', $e->getMessage());

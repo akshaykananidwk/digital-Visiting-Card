@@ -12,7 +12,7 @@ $labels = ['general' => 'General', 'cards' => 'Cards', 'payment' => 'Payments & 
     <?php endforeach; ?>
 </div>
 
-<form method="post" action="<?= e(url('admin/settings/' . $tab)) ?>" enctype="multipart/form-data" class="card" style="max-width:840px">
+<form method="post" action="<?= e(url_path('admin/settings/' . $tab)) ?>" enctype="multipart/form-data" class="card" style="max-width:840px">
     <?= csrf_field() ?>
     <div class="card-body">
         <?php if ($tab === 'general'): ?>

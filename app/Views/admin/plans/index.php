@@ -22,7 +22,7 @@
                         <td><span class="badge <?= (int) $plan['is_active'] === 1 ? 'badge-success' : 'badge-danger' ?>"><?= (int) $plan['is_active'] === 1 ? 'active' : 'hidden' ?></span></td>
                         <td class="text-right nowrap">
                             <a class="btn btn-sm btn-secondary" href="<?= e(url('admin/plans/' . (int) $plan['id'] . '/edit')) ?>"><?= icon('edit', 13) ?> Edit</a>
-                            <form method="post" action="<?= e(url('admin/plans/' . (int) $plan['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this plan?">
+                            <form method="post" action="<?= e(url_path('admin/plans/' . (int) $plan['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this plan?">
                                 <?= csrf_field() ?>
                                 <button class="btn btn-sm btn-ghost" type="submit"><?= icon('trash', 13) ?></button>
                             </form>

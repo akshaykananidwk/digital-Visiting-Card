@@ -48,7 +48,7 @@
     </div>
 
     <div class="stack">
-        <form method="post" action="<?= e(url('leads/' . (int) $lead['id'] . '/status')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('leads/' . (int) $lead['id'] . '/status')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Update</h3></div>
             <div class="card-body">
@@ -76,7 +76,7 @@
             <?php endif; ?>
         </div></div>
 
-        <form method="post" action="<?= e(url('leads/' . (int) $lead['id'] . '/delete')) ?>" data-confirm="Delete this lead permanently?">
+        <form method="post" action="<?= e(url_path('leads/' . (int) $lead['id'] . '/delete')) ?>" data-confirm="Delete this lead permanently?">
             <?= csrf_field() ?>
             <button class="btn btn-ghost btn-block btn-sm" type="submit" style="color:var(--danger)"><?= icon('trash', 14) ?> Delete lead</button>
         </form>

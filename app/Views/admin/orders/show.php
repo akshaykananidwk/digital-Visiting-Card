@@ -80,7 +80,7 @@ $__view->extend('layouts.admin'); ?>
         <?php endif; ?>
 
         <?php if ((string) $order['status'] === 'paid'): ?>
-            <form method="post" action="<?= e(url('admin/orders/' . (int) $order['id'] . '/refund')) ?>" class="card" style="border-color:var(--warning)"
+            <form method="post" action="<?= e(url_path('admin/orders/' . (int) $order['id'] . '/refund')) ?>" class="card" style="border-color:var(--warning)"
                   data-confirm="Refund this payment through the gateway and cancel the subscription?">
                 <?= csrf_field() ?>
                 <div class="card-header"><h3 style="font-size:.98rem">Refund</h3></div>

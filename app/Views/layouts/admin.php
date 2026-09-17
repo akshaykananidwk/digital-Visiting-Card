@@ -25,7 +25,7 @@ $maintenance = App\Middleware\Maintenance::isActive();
 <?php if ($maintenance): ?>
     <div class="impersonation-bar" style="background:var(--danger)">
         <span><?= icon('alert', 16) ?> Maintenance mode is ON — visitors cannot access the site.</span>
-        <form method="post" action="<?= e(url('admin/updates/maintenance')) ?>" data-no-lock="1">
+        <form method="post" action="<?= e(url_path('admin/updates/maintenance')) ?>" data-no-lock="1">
             <?= csrf_field() ?>
             <input type="hidden" name="enabled" value="0">
             <button class="btn btn-sm" type="submit">Turn off</button>
@@ -94,7 +94,7 @@ $maintenance = App\Middleware\Maintenance::isActive();
             <div class="tiny muted mb-2"><?= e(str_replace('_', ' ', (string) ($user['role'] ?? ''))) ?></div>
             <div class="row" style="gap:6px">
                 <a class="btn btn-secondary btn-sm flex-1" href="<?= e(url('/')) ?>" target="_blank" rel="noopener"><?= icon('external', 15) ?> Site</a>
-                <form method="post" action="<?= e(url('logout')) ?>" style="flex:1" data-no-lock="1">
+                <form method="post" action="<?= e(url_path('logout')) ?>" style="flex:1" data-no-lock="1">
                     <?= csrf_field() ?>
                     <button class="btn btn-ghost btn-sm btn-block" type="submit"><?= icon('log-out', 15) ?> Sign out</button>
                 </form>

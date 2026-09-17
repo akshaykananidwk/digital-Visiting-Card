@@ -17,7 +17,7 @@
         <?php endforeach; ?>
     </div></div>
 
-    <form method="post" action="<?= e(url('install/finish')) ?>">
+    <form method="post" action="<?= e(url_path('install/finish')) ?>">
         <?= csrf_field() ?>
         <button class="btn btn-lg btn-block btn-success" type="submit"><?= icon('check-circle', 18) ?> Complete installation</button>
     </form>

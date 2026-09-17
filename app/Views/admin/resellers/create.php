@@ -1,6 +1,6 @@
 <?php $__view->extend('layouts.admin'); ?>
 <?php $__view->start('content'); ?>
-<form method="post" action="<?= e(url('admin/resellers')) ?>" class="card" style="max-width:720px">
+<form method="post" action="<?= e(url_path('admin/resellers')) ?>" class="card" style="max-width:720px">
     <?= csrf_field() ?>
     <div class="card-header"><h2>New reseller</h2></div>
     <div class="card-body">

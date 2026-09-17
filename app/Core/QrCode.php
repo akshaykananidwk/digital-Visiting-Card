@@ -7,7 +7,7 @@ namespace App\Core;
 use RuntimeException;
 
 /**
- * Self-contained QR Code encoder (ISO/IEC 18004), byte mode, versions 1-10,
+ * Self-contained QR Code encoder (ISO/IEC 18004), byte mode, versions 1-40,
  * all four error-correction levels. Renders to SVG, PNG (GD) and a raw
  * boolean matrix. No external library or web service is used, so cards keep
  * working on hosts without outbound internet access.
@@ -19,10 +19,19 @@ final class QrCode
     public const ECC_Q = 'Q';
     public const ECC_H = 'H';
 
+    /** Highest symbol version defined by the standard. */
+    private const MAX_VERSION = 40;
+
     /** version => total codewords */
     private const TOTAL_CODEWORDS = [
         1 => 26, 2 => 44, 3 => 70, 4 => 100, 5 => 134,
         6 => 172, 7 => 196, 8 => 242, 9 => 292, 10 => 346,
+        11 => 404, 12 => 466, 13 => 532, 14 => 581, 15 => 655,
+        16 => 733, 17 => 815, 18 => 901, 19 => 991, 20 => 1085,
+        21 => 1156, 22 => 1258, 23 => 1364, 24 => 1474, 25 => 1588,
+        26 => 1706, 27 => 1828, 28 => 1921, 29 => 2051, 30 => 2185,
+        31 => 2323, 32 => 2465, 33 => 2611, 34 => 2761, 35 => 2876,
+        36 => 3034, 37 => 3196, 38 => 3362, 39 => 3532, 40 => 3706,
     ];
 
     /**
@@ -39,16 +48,70 @@ final class QrCode
         8  => ['L' => [24, [[2, 97]]],            'M' => [22, [[2, 38], [2, 39]]],   'Q' => [22, [[4, 18], [2, 19]]],   'H' => [26, [[4, 14], [2, 15]]]],
         9  => ['L' => [30, [[2, 116]]],           'M' => [22, [[3, 36], [2, 37]]],   'Q' => [20, [[4, 16], [4, 17]]],   'H' => [24, [[4, 12], [4, 13]]]],
         10 => ['L' => [18, [[2, 68], [2, 69]]],   'M' => [26, [[4, 43], [1, 44]]],   'Q' => [24, [[6, 19], [2, 20]]],   'H' => [28, [[6, 15], [2, 16]]]],
+        11 => ['L' => [20, [[4, 81]]], 'M' => [30, [[1, 50], [4, 51]]], 'Q' => [28, [[4, 22], [4, 23]]], 'H' => [24, [[3, 12], [8, 13]]]],
+        12 => ['L' => [24, [[2, 92], [2, 93]]], 'M' => [22, [[6, 36], [2, 37]]], 'Q' => [26, [[4, 20], [6, 21]]], 'H' => [28, [[7, 14], [4, 15]]]],
+        13 => ['L' => [26, [[4, 107]]], 'M' => [22, [[8, 37], [1, 38]]], 'Q' => [24, [[8, 20], [4, 21]]], 'H' => [22, [[12, 11], [4, 12]]]],
+        14 => ['L' => [30, [[3, 115], [1, 116]]], 'M' => [24, [[4, 40], [5, 41]]], 'Q' => [20, [[11, 16], [5, 17]]], 'H' => [24, [[11, 12], [5, 13]]]],
+        15 => ['L' => [22, [[5, 87], [1, 88]]], 'M' => [24, [[5, 41], [5, 42]]], 'Q' => [30, [[5, 24], [7, 25]]], 'H' => [24, [[11, 12], [7, 13]]]],
+        16 => ['L' => [24, [[5, 98], [1, 99]]], 'M' => [28, [[7, 45], [3, 46]]], 'Q' => [24, [[15, 19], [2, 20]]], 'H' => [30, [[3, 15], [13, 16]]]],
+        17 => ['L' => [28, [[1, 107], [5, 108]]], 'M' => [28, [[10, 46], [1, 47]]], 'Q' => [28, [[1, 22], [15, 23]]], 'H' => [28, [[2, 14], [17, 15]]]],
+        18 => ['L' => [30, [[5, 120], [1, 121]]], 'M' => [26, [[9, 43], [4, 44]]], 'Q' => [28, [[17, 22], [1, 23]]], 'H' => [28, [[2, 14], [19, 15]]]],
+        19 => ['L' => [28, [[3, 113], [4, 114]]], 'M' => [26, [[3, 44], [11, 45]]], 'Q' => [26, [[17, 21], [4, 22]]], 'H' => [26, [[9, 13], [16, 14]]]],
+        20 => ['L' => [28, [[3, 107], [5, 108]]], 'M' => [26, [[3, 41], [13, 42]]], 'Q' => [30, [[15, 24], [5, 25]]], 'H' => [28, [[15, 15], [10, 16]]]],
+        21 => ['L' => [28, [[4, 116], [4, 117]]], 'M' => [26, [[17, 42]]], 'Q' => [28, [[17, 22], [6, 23]]], 'H' => [30, [[19, 16], [6, 17]]]],
+        22 => ['L' => [28, [[2, 111], [7, 112]]], 'M' => [28, [[17, 46]]], 'Q' => [30, [[7, 24], [16, 25]]], 'H' => [24, [[34, 13]]]],
+        23 => ['L' => [30, [[4, 121], [5, 122]]], 'M' => [28, [[4, 47], [14, 48]]], 'Q' => [30, [[11, 24], [14, 25]]], 'H' => [30, [[16, 15], [14, 16]]]],
+        24 => ['L' => [30, [[6, 117], [4, 118]]], 'M' => [28, [[6, 45], [14, 46]]], 'Q' => [30, [[11, 24], [16, 25]]], 'H' => [30, [[30, 16], [2, 17]]]],
+        25 => ['L' => [26, [[8, 106], [4, 107]]], 'M' => [28, [[8, 47], [13, 48]]], 'Q' => [30, [[7, 24], [22, 25]]], 'H' => [30, [[22, 15], [13, 16]]]],
+        26 => ['L' => [28, [[10, 114], [2, 115]]], 'M' => [28, [[19, 46], [4, 47]]], 'Q' => [28, [[28, 22], [6, 23]]], 'H' => [30, [[33, 16], [4, 17]]]],
+        27 => ['L' => [30, [[8, 122], [4, 123]]], 'M' => [28, [[22, 45], [3, 46]]], 'Q' => [30, [[8, 23], [26, 24]]], 'H' => [30, [[12, 15], [28, 16]]]],
+        28 => ['L' => [30, [[3, 117], [10, 118]]], 'M' => [28, [[3, 45], [23, 46]]], 'Q' => [30, [[4, 24], [31, 25]]], 'H' => [30, [[11, 15], [31, 16]]]],
+        29 => ['L' => [30, [[7, 116], [7, 117]]], 'M' => [28, [[21, 45], [7, 46]]], 'Q' => [30, [[1, 23], [37, 24]]], 'H' => [30, [[19, 15], [26, 16]]]],
+        30 => ['L' => [30, [[5, 115], [10, 116]]], 'M' => [28, [[19, 47], [10, 48]]], 'Q' => [30, [[15, 24], [25, 25]]], 'H' => [30, [[23, 15], [25, 16]]]],
+        31 => ['L' => [30, [[13, 115], [3, 116]]], 'M' => [28, [[2, 46], [29, 47]]], 'Q' => [30, [[42, 24], [1, 25]]], 'H' => [30, [[23, 15], [28, 16]]]],
+        32 => ['L' => [30, [[17, 115]]], 'M' => [28, [[10, 46], [23, 47]]], 'Q' => [30, [[10, 24], [35, 25]]], 'H' => [30, [[19, 15], [35, 16]]]],
+        33 => ['L' => [30, [[17, 115], [1, 116]]], 'M' => [28, [[14, 46], [21, 47]]], 'Q' => [30, [[29, 24], [19, 25]]], 'H' => [30, [[11, 15], [46, 16]]]],
+        34 => ['L' => [30, [[13, 115], [6, 116]]], 'M' => [28, [[14, 46], [23, 47]]], 'Q' => [30, [[44, 24], [7, 25]]], 'H' => [30, [[59, 16], [1, 17]]]],
+        35 => ['L' => [30, [[12, 121], [7, 122]]], 'M' => [28, [[12, 47], [26, 48]]], 'Q' => [30, [[39, 24], [14, 25]]], 'H' => [30, [[22, 15], [41, 16]]]],
+        36 => ['L' => [30, [[6, 121], [14, 122]]], 'M' => [28, [[6, 47], [34, 48]]], 'Q' => [30, [[46, 24], [10, 25]]], 'H' => [30, [[2, 15], [64, 16]]]],
+        37 => ['L' => [30, [[17, 122], [4, 123]]], 'M' => [28, [[29, 46], [14, 47]]], 'Q' => [30, [[49, 24], [10, 25]]], 'H' => [30, [[24, 15], [46, 16]]]],
+        38 => ['L' => [30, [[4, 122], [18, 123]]], 'M' => [28, [[13, 46], [32, 47]]], 'Q' => [30, [[48, 24], [14, 25]]], 'H' => [30, [[42, 15], [32, 16]]]],
+        39 => ['L' => [30, [[20, 117], [4, 118]]], 'M' => [28, [[40, 47], [7, 48]]], 'Q' => [30, [[43, 24], [22, 25]]], 'H' => [30, [[10, 15], [67, 16]]]],
+        40 => ['L' => [30, [[19, 118], [6, 119]]], 'M' => [28, [[18, 47], [31, 48]]], 'Q' => [30, [[34, 24], [34, 25]]], 'H' => [30, [[20, 15], [61, 16]]]],
     ];
 
     /** version => alignment pattern centre coordinates */
     private const ALIGNMENT = [
-        1 => [], 2 => [6, 18], 3 => [6, 22], 4 => [6, 26], 5 => [6, 30],
-        6 => [6, 34], 7 => [6, 22, 38], 8 => [6, 24, 42], 9 => [6, 26, 46], 10 => [6, 28, 50],
+        1 => [], 2 => [6, 18], 3 => [6, 22], 4 => [6, 26],
+        5 => [6, 30], 6 => [6, 34], 7 => [6, 22, 38], 8 => [6, 24, 42],
+        9 => [6, 26, 46], 10 => [6, 28, 50], 11 => [6, 30, 54], 12 => [6, 32, 58],
+        13 => [6, 34, 62], 14 => [6, 26, 46, 66], 15 => [6, 26, 48, 70], 16 => [6, 26, 50, 74],
+        17 => [6, 30, 54, 78], 18 => [6, 30, 56, 82], 19 => [6, 30, 58, 86], 20 => [6, 34, 62, 90],
+        21 => [6, 28, 50, 72, 94], 22 => [6, 26, 50, 74, 98], 23 => [6, 30, 54, 78, 102], 24 => [6, 28, 54, 80, 106],
+        25 => [6, 32, 58, 84, 110], 26 => [6, 30, 58, 86, 114], 27 => [6, 34, 62, 90, 118], 28 => [6, 26, 50, 74, 98, 122],
+        29 => [6, 30, 54, 78, 102, 126], 30 => [6, 26, 52, 78, 104, 130], 31 => [6, 30, 56, 82, 108, 134], 32 => [6, 34, 60, 86, 112, 138],
+        33 => [6, 30, 58, 86, 114, 142], 34 => [6, 34, 62, 90, 118, 146], 35 => [6, 30, 54, 78, 102, 126, 150], 36 => [6, 24, 50, 76, 102, 128, 154],
+        37 => [6, 28, 54, 80, 106, 132, 158], 38 => [6, 32, 58, 84, 110, 136, 162], 39 => [6, 26, 54, 82, 110, 138, 166], 40 => [6, 30, 58, 86, 114, 142, 170],
     ];
 
-    /** version => 18-bit version information (only versions >= 7) */
-    private const VERSION_INFO = [7 => 0x07C94, 8 => 0x085BC, 9 => 0x09A99, 10 => 0x0A4D3];
+    /**
+     * 18-bit version information for versions >= 7: the 6-bit version number
+     * followed by 12 BCH(18,6) check bits. Computed rather than tabulated so
+     * there is no 34-entry table of magic constants to mistype.
+     */
+    private static function versionInfo(int $version): int
+    {
+        if ($version < 7) {
+            return 0;
+        }
+
+        $remainder = $version;
+        for ($i = 0; $i < 12; $i++) {
+            $remainder = ($remainder << 1) ^ ((($remainder >> 11) & 1) * 0x1F25);
+        }
+
+        return (($version << 12) | $remainder) & 0x3FFFF;
+    }
 
     private const ECC_BITS = ['L' => 0b01, 'M' => 0b00, 'Q' => 0b11, 'H' => 0b10];
 
@@ -207,13 +270,22 @@ final class QrCode
 
     private function chooseVersion(int $length, int $minVersion): int
     {
-        for ($version = max(1, $minVersion); $version <= 10; $version++) {
+        for ($version = max(1, $minVersion); $version <= self::MAX_VERSION; $version++) {
             if ($length <= $this->capacity($version)) {
                 return $version;
             }
         }
 
-        throw new RuntimeException('Data is too long for a version 10 QR code (' . $length . ' bytes).');
+        throw new RuntimeException(
+            'Data is too long for a QR code (' . $length . ' bytes; the maximum at error-correction level '
+            . $this->level . ' is ' . $this->capacity(self::MAX_VERSION) . ').'
+        );
+    }
+
+    /** Largest byte-mode payload this encoder can carry at the current level. */
+    public function maxBytes(): int
+    {
+        return $this->capacity(self::MAX_VERSION);
     }
 
     private function capacity(int $version): int
@@ -583,20 +655,28 @@ final class QrCode
         }
         $format = (($data << 10) | $value) ^ 0x5412;
 
+        // $i is the bit's significance, bit 0 being the least significant.
+        // The top-left copy runs up the column and then left along the row:
+        // rows 0-5 and row 7 of column 8 carry bits 0-6, (8,8) carries bit 7,
+        // and columns 7 then 5-0 of row 8 carry bits 8-14. Writing that copy
+        // in the opposite order still leaves a symbol whose second copy is
+        // right, so most of them scan; the ones where the mirrored bits
+        // happen to form another valid format codeword are read with the
+        // wrong mask and cannot be decoded at all.
         for ($i = 0; $i < 15; $i++) {
             $bit = ($format >> $i) & 1;
 
             // Top-left copy
-            if ($i < 6) {
-                $this->matrix[8][$i] = $bit;
+            if ($i <= 5) {
+                $this->matrix[$i][8] = $bit;
             } elseif ($i === 6) {
-                $this->matrix[8][7] = $bit;
+                $this->matrix[7][8] = $bit;
             } elseif ($i === 7) {
                 $this->matrix[8][8] = $bit;
             } elseif ($i === 8) {
-                $this->matrix[7][8] = $bit;
+                $this->matrix[8][7] = $bit;
             } else {
-                $this->matrix[14 - $i][8] = $bit;
+                $this->matrix[8][14 - $i] = $bit;
             }
 
             // Split copy around the other two finders
@@ -612,7 +692,7 @@ final class QrCode
 
     private function placeVersionInfo(): void
     {
-        $info = self::VERSION_INFO[$this->version] ?? 0;
+        $info = self::versionInfo($this->version);
         for ($i = 0; $i < 18; $i++) {
             $bit = ($info >> $i) & 1;
             $row = (int) floor($i / 3);
@@ -620,6 +700,19 @@ final class QrCode
             $this->matrix[$row][$col] = $bit;
             $this->matrix[$col][$row] = $bit;
         }
+    }
+
+    /** Occurrences of $needle in $haystack, counting overlaps. */
+    private static function countOverlapping(string $haystack, string $needle): int
+    {
+        $count = 0;
+        $offset = 0;
+        while (($position = strpos($haystack, $needle, $offset)) !== false) {
+            $count++;
+            $offset = $position + 1;
+        }
+
+        return $count;
     }
 
     private function penalty(): int
@@ -662,7 +755,11 @@ final class QrCode
             }
         }
 
-        // Rule 3 — finder-like patterns.
+        // Rule 3 — finder-like 1:1:3:1:1 patterns with four light modules on
+        // one side. Occurrences may overlap ('10111010000101110100001' holds
+        // two), and substr_count() would only see the first of each pair,
+        // which lets a mask that riddles the symbol with false finder
+        // patterns score as though it were clean.
         $patterns = ['10111010000', '00001011101'];
         for ($i = 0; $i < $size; $i++) {
             $rowString = '';
@@ -672,8 +769,8 @@ final class QrCode
                 $colString .= (string) $this->matrix[$j][$i];
             }
             foreach ($patterns as $pattern) {
-                $penalty += 40 * substr_count($rowString, $pattern);
-                $penalty += 40 * substr_count($colString, $pattern);
+                $penalty += 40 * self::countOverlapping($rowString, $pattern);
+                $penalty += 40 * self::countOverlapping($colString, $pattern);
             }
         }
 

@@ -41,7 +41,7 @@ $cardId = (int) $card['id'];
     </div>
 
     <div class="stack">
-        <form method="post" action="<?= e(url('cards/' . $cardId . '/qr')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('cards/' . $cardId . '/qr')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Style</h3></div>
             <div class="card-body">

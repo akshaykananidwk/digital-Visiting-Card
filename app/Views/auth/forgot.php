@@ -3,7 +3,7 @@
     <h1 style="font-size:1.45rem;margin-bottom:4px">Reset your password</h1>
     <p class="muted small mb-3">Enter your email address and we will send you a reset link.</p>
 
-    <form method="post" action="<?= e(url('forgot-password')) ?>">
+    <form method="post" action="<?= e(url_path('forgot-password')) ?>">
         <?= csrf_field() ?>
         <div class="field">
             <label class="required" for="email">Email address</label>

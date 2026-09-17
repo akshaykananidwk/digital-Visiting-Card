@@ -29,7 +29,7 @@ $isActive = static function (string $href) use ($path): bool {
 <?php if ($auth->isImpersonating()): ?>
     <div class="impersonation-bar">
         <span><?= icon('alert', 16) ?> You are signed in as <strong><?= e($user['name'] ?? '') ?></strong> (<?= e($user['email'] ?? '') ?>).</span>
-        <form method="post" action="<?= e(url('impersonate/stop')) ?>" data-no-lock="1">
+        <form method="post" action="<?= e(url_path('impersonate/stop')) ?>" data-no-lock="1">
             <?= csrf_field() ?>
             <button class="btn btn-sm" type="submit">Exit impersonation</button>
         </form>
@@ -75,7 +75,7 @@ $isActive = static function (string $href) use ($path): bool {
             </div>
             <div class="row" style="gap:6px">
                 <a class="btn btn-secondary btn-sm flex-1" href="<?= e(url('account')) ?>"><?= icon('settings', 15) ?> Account</a>
-                <form method="post" action="<?= e(url('logout')) ?>" style="flex:1" data-no-lock="1">
+                <form method="post" action="<?= e(url_path('logout')) ?>" style="flex:1" data-no-lock="1">
                     <?= csrf_field() ?>
                     <button class="btn btn-ghost btn-sm btn-block" type="submit"><?= icon('log-out', 15) ?> Sign out</button>
                 </form>

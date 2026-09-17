@@ -10,7 +10,7 @@ $__view->extend('layouts.panel');
         <p class="muted">Fill in the basics — you can add services, products and photos afterwards.</p>
     </div>
 
-    <form method="post" action="<?= e(url('onboarding')) ?>" class="card">
+    <form method="post" action="<?= e(url_path('onboarding')) ?>" class="card">
         <?= csrf_field() ?>
         <div class="card-body">
             <div class="field">

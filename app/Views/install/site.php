@@ -2,7 +2,7 @@
 <?php $__view->start('content'); ?>
     <p class="muted">Basic branding and support details. Everything here can be changed later in Admin → Settings.</p>
 
-    <form method="post" action="<?= e(url('install/site')) ?>">
+    <form method="post" action="<?= e(url_path('install/site')) ?>">
         <?= csrf_field() ?>
         <div class="field">
             <label class="required" for="site_name">Website / brand name</label>

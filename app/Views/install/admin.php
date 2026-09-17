@@ -2,7 +2,7 @@
 <?php $__view->start('content'); ?>
     <p class="muted">Create the super administrator account. This account has full access to every part of the platform.</p>
 
-    <form method="post" action="<?= e(url('install/admin')) ?>">
+    <form method="post" action="<?= e(url_path('install/admin')) ?>">
         <?= csrf_field() ?>
         <div class="field">
             <label class="required" for="name">Full name</label>

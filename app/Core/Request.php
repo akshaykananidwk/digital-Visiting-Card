@@ -31,7 +31,16 @@ final class Request
         $this->query  = $_GET;
         $this->body   = $_POST;
         $this->files  = $_FILES;
-        $this->server = array_map(static fn ($v) => is_string($v) ? $v : (string) $v, $_SERVER);
+        // $_SERVER carries non-scalar entries under CLI ($_SERVER['argv']),
+        // which a blind string cast would choke on.
+        $this->server = [];
+        foreach ($_SERVER as $key => $value) {
+            if (is_string($value)) {
+                $this->server[$key] = $value;
+            } elseif (is_scalar($value)) {
+                $this->server[$key] = (string) $value;
+            }
+        }
 
         if ($this->body === [] && str_contains($this->header('Content-Type', ''), 'application/json')) {
             $decoded = json_decode($this->rawBody(), true);

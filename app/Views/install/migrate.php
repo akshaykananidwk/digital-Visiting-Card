@@ -27,7 +27,7 @@
             <?php endif; ?>
         </div></div>
 
-        <form method="post" action="<?= e(url('install/migrate')) ?>">
+        <form method="post" action="<?= e(url_path('install/migrate')) ?>">
             <?= csrf_field() ?>
             <button class="btn btn-lg btn-block" type="submit">
                 <?= icon('database', 18) ?> <?= $pending === [] ? 'Re-run seed data and continue' : 'Create tables now' ?>

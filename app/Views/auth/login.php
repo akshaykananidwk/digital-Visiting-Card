@@ -3,7 +3,7 @@
     <h1 style="font-size:1.45rem;margin-bottom:4px">Welcome back</h1>
     <p class="muted small mb-3">Sign in to manage your digital cards.</p>
 
-    <form method="post" action="<?= e(url('login')) ?>">
+    <form method="post" action="<?= e(url_path('login')) ?>">
         <?= csrf_field() ?>
         <div class="field">
             <label class="required" for="email">Email address</label>

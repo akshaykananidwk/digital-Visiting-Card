@@ -188,7 +188,12 @@ final class BackupService
             }
 
             if ($database && !empty($backup['database_path'])) {
+                // The operational history must survive the restore: without
+                // this the record of the failure, of the backup itself and
+                // of the rollback would be rolled back along with the data.
+                $history = $this->captureOperationalHistory();
                 $this->importDatabase(STORAGE_PATH . '/' . (string) $backup['database_path']);
+                $this->restoreOperationalHistory($history);
             }
 
             (new Backup())->updateById($backupId, ['status' => 'restored']);
@@ -199,6 +204,59 @@ final class BackupService
             Logger::error('Restore failed: ' . $e->getMessage());
 
             return ['success' => false, 'message' => 'Restore failed: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Rows that describe the platform's own maintenance history. They are
+     * re-applied after a database restore so an administrator can still see
+     * what happened, and so existing backups are not forgotten.
+     *
+     * @return array<string,array<int,array<string,mixed>>>
+     */
+    private function captureOperationalHistory(): array
+    {
+        $db = Database::instance();
+        $history = [];
+
+        foreach (['update_logs', 'backups'] as $table) {
+            try {
+                $history[$table] = $db->select('SELECT * FROM `' . $db->table($table) . '`');
+            } catch (Throwable) {
+                $history[$table] = [];
+            }
+        }
+
+        return $history;
+    }
+
+    /** @param array<string,array<int,array<string,mixed>>> $history */
+    private function restoreOperationalHistory(array $history): void
+    {
+        $db = Database::instance();
+
+        foreach ($history as $table => $rows) {
+            foreach ($rows as $row) {
+                try {
+                    $columns = array_keys($row);
+                    $updates = [];
+                    foreach ($columns as $column) {
+                        if ($column !== 'id') {
+                            $updates[] = sprintf('`%s` = VALUES(`%s`)', $column, $column);
+                        }
+                    }
+                    $sql = sprintf(
+                        'INSERT INTO `%s` (%s) VALUES (%s)%s',
+                        $db->table($table),
+                        implode(', ', array_map(static fn (string $c): string => '`' . $c . '`', $columns)),
+                        implode(', ', array_map(static fn (string $c): string => ':' . $c, $columns)),
+                        $updates === [] ? '' : ' ON DUPLICATE KEY UPDATE ' . implode(', ', $updates)
+                    );
+                    $db->query($sql, $row);
+                } catch (Throwable $e) {
+                    Logger::warning('Could not preserve ' . $table . ' row across the restore: ' . $e->getMessage());
+                }
+            }
         }
     }
 
@@ -292,6 +350,15 @@ final class BackupService
         }
     }
 
+    /**
+     * Directories whose contents are fully managed by a release. Only these
+     * are pruned during a restore, so customer uploads and local storage are
+     * never at risk.
+     *
+     * @var array<int,string>
+     */
+    private const MANAGED_DIRS = ['app', 'assets', 'config', 'database', 'bin', 'install'];
+
     private function restoreFiles(string $archive): void
     {
         if (!class_exists(ZipArchive::class)) {
@@ -304,6 +371,7 @@ final class BackupService
         }
 
         $protected = UpdateService::protectedPaths();
+        $archived = [];
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $name = (string) $zip->getNameIndex($i);
@@ -331,10 +399,54 @@ final class BackupService
             fclose($stream);
             if ($contents !== false) {
                 @file_put_contents($target, $contents, LOCK_EX);
+                $archived[$name] = true;
             }
         }
 
         $zip->close();
+
+        // A restore must be a true snapshot: remove files a failed update
+        // added that the backup does not contain. Without this a broken
+        // migration or a rogue file would survive the rollback.
+        $this->pruneExtraneousFiles($archived, $protected);
+    }
+
+    /**
+     * @param array<string,bool>  $archived Paths present in the backup
+     * @param array<int,string>   $protected
+     */
+    private function pruneExtraneousFiles(array $archived, array $protected): int
+    {
+        $removed = 0;
+
+        foreach (self::MANAGED_DIRS as $dir) {
+            $absolute = BASE_PATH . '/' . $dir;
+            if (!is_dir($absolute)) {
+                continue;
+            }
+
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($absolute, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+
+            foreach ($iterator as $item) {
+                if (!$item instanceof \SplFileInfo || !$item->isFile()) {
+                    continue;
+                }
+                $relative = str_replace('\\', '/', substr($item->getPathname(), strlen(BASE_PATH) + 1));
+
+                if (isset($archived[$relative]) || UpdateService::isProtected($relative, $protected)) {
+                    continue;
+                }
+                if (@unlink($item->getPathname())) {
+                    $removed++;
+                    Logger::info('Restore removed a file that was not in the backup', ['path' => $relative]);
+                }
+            }
+        }
+
+        return $removed;
     }
 
     // ----------------------------------------------------------- Database --

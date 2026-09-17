@@ -14,7 +14,7 @@ $__view->extend('layouts.public');
     <div class="grid" style="grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:36px;align-items:start">
         <div>
             <div class="phone-frame">
-                <iframe src="<?= e(url('templates/preview/' . $template['code'])) ?>" title="Preview of <?= e((string) $template['name']) ?>"></iframe>
+                <iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="Preview of <?= e((string) $template['name']) ?>"></iframe>
             </div>
             <p class="text-center small muted mt-2">Live preview · scroll inside the phone</p>
         </div>
@@ -81,7 +81,7 @@ $__view->extend('layouts.public');
             <?php foreach ($related as $item): ?>
                 <a class="template-card" href="<?= e(url('templates/' . $item['code'])) ?>">
                     <div class="template-thumb">
-                        <iframe src="<?= e(url('templates/preview/' . $item['code'])) ?>" title="<?= e((string) $item['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
+                        <iframe src="<?= e(url_path('templates/preview/' . $item['code'])) ?>" title="<?= e((string) $item['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
                     </div>
                     <div class="template-meta"><div class="name truncate"><?= e((string) $item['name']) ?></div></div>
                 </a>

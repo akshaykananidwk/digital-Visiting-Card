@@ -53,12 +53,12 @@ $tabs = [
             <a class="btn btn-sm btn-secondary" href="<?= e(url('cards/' . $cardId . '/design')) ?>"><?= icon('layers', 15) ?> Design</a>
             <a class="btn btn-sm btn-secondary" href="<?= e(url('cards/' . $cardId . '/qr')) ?>"><?= icon('qr', 15) ?> QR</a>
             <?php if ((string) $card['status'] === 'published'): ?>
-                <form method="post" action="<?= e(url('cards/' . $cardId . '/unpublish')) ?>" data-confirm="Take this card offline?">
+                <form method="post" action="<?= e(url_path('cards/' . $cardId . '/unpublish')) ?>" data-confirm="Take this card offline?">
                     <?= csrf_field() ?>
                     <button class="btn btn-sm btn-secondary" type="submit">Unpublish</button>
                 </form>
             <?php else: ?>
-                <form method="post" action="<?= e(url('cards/' . $cardId . '/publish')) ?>">
+                <form method="post" action="<?= e(url_path('cards/' . $cardId . '/publish')) ?>">
                     <?= csrf_field() ?>
                     <button class="btn btn-sm btn-success" type="submit"><?= icon('rocket', 15) ?> Publish</button>
                 </form>
@@ -90,13 +90,13 @@ $tabs = [
                             <div class="label"><?= e($label) ?></div>
                             <?php if (!empty($card[$field])): ?>
                                 <img class="upload-preview mb-1" src="<?= e((string) upload_url((string) $card[$field])) ?>" alt="">
-                                <form method="post" action="<?= e(url('cards/' . $cardId . '/media/remove')) ?>" data-confirm="Remove this image?">
+                                <form method="post" action="<?= e(url_path('cards/' . $cardId . '/media/remove')) ?>" data-confirm="Remove this image?">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="field" value="<?= e($field) ?>">
                                     <button class="btn btn-ghost btn-sm" type="submit"><?= icon('trash', 13) ?> Remove</button>
                                 </form>
                             <?php endif; ?>
-                            <form method="post" action="<?= e(url('cards/' . $cardId . '/media')) ?>" enctype="multipart/form-data">
+                            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/media')) ?>" enctype="multipart/form-data">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="field" value="<?= e($field) ?>">
                                 <input class="input" type="file" name="image" accept="image/jpeg,image/png,image/webp" required style="font-size:.78rem;padding:7px">
@@ -107,7 +107,7 @@ $tabs = [
                 </div>
             </div></div>
 
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/profile')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/profile')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="field">
@@ -139,7 +139,7 @@ $tabs = [
             </form>
 
         <?php elseif ($tab === 'business'): ?>
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/business')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/business')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="grid grid-2" style="gap:0 16px">
@@ -209,7 +209,7 @@ $tabs = [
             </form>
 
         <?php elseif ($tab === 'contact'): ?>
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/contact')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/contact')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="grid grid-2" style="gap:0 16px">
@@ -234,7 +234,7 @@ $tabs = [
             </form>
 
         <?php elseif ($tab === 'social'): ?>
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/social')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/social')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <?php foreach ($platforms as $platform => $meta): ?>
@@ -249,7 +249,7 @@ $tabs = [
             </form>
 
         <?php elseif ($tab === 'sections'): ?>
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/sections')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/sections')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <p class="small muted">Turn sections on or off. A section with no content is hidden automatically.</p>
@@ -275,7 +275,7 @@ $tabs = [
             <?php if (!$canSeo): ?>
                 <div class="alert alert-info"><?= icon('award', 18) ?><div>SEO controls are available on paid plans. <a href="<?= e(url('billing')) ?>">Upgrade</a></div></div>
             <?php endif; ?>
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/seo')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/seo')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="field">
@@ -300,7 +300,7 @@ $tabs = [
             </form>
 
         <?php else: ?>
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/settings')) ?>" class="card mb-3">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/settings')) ?>" class="card mb-3">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <?php foreach ([
@@ -323,7 +323,7 @@ $tabs = [
                 <div class="card-footer text-right"><button class="btn" type="submit"><?= icon('save', 16) ?> Save settings</button></div>
             </form>
 
-            <form method="post" action="<?= e(url('cards/' . $cardId . '/slug')) ?>" class="card mb-3">
+            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/slug')) ?>" class="card mb-3">
                 <?= csrf_field() ?>
                 <div class="card-header"><h3>Card link</h3></div>
                 <div class="card-body">
@@ -341,7 +341,7 @@ $tabs = [
                 <div class="card-header"><h3>Duplicate</h3></div>
                 <div class="card-body">
                     <p class="small muted">Create a copy of this card with all of its content — useful for a second branch or language.</p>
-                    <form method="post" action="<?= e(url('cards/' . $cardId . '/duplicate')) ?>">
+                    <form method="post" action="<?= e(url_path('cards/' . $cardId . '/duplicate')) ?>">
                         <?= csrf_field() ?>
                         <button class="btn btn-secondary" type="submit"><?= icon('copy', 15) ?> Duplicate this card</button>
                     </form>
@@ -352,7 +352,7 @@ $tabs = [
                 <div class="card-header"><h3 style="color:var(--danger)">Delete this card</h3></div>
                 <div class="card-body">
                     <p class="small muted">This permanently removes the card, its content, analytics and leads. Type <code><?= e((string) $card['slug']) ?></code> to confirm.</p>
-                    <form method="post" action="<?= e(url('cards/' . $cardId . '/delete')) ?>" data-confirm="Delete this card permanently? This cannot be undone.">
+                    <form method="post" action="<?= e(url_path('cards/' . $cardId . '/delete')) ?>" data-confirm="Delete this card permanently? This cannot be undone.">
                         <?= csrf_field() ?>
                         <div class="row" style="gap:8px">
                             <input class="input flex-1" type="text" name="confirm_slug" placeholder="<?= e((string) $card['slug']) ?>" required>

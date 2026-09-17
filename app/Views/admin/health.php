@@ -42,7 +42,7 @@ $__view->extend('layouts.admin'); ?>
                 'purge-rate-limits'    => ['Purge expired rate-limit rows', 'shield'],
                 'clear-cache'          => ['Clear cache and reset OPcache', 'refresh'],
             ] as $task => [$label, $iconName]): ?>
-                <form method="post" action="<?= e(url('admin/maintenance/run/' . $task)) ?>">
+                <form method="post" action="<?= e(url_path('admin/maintenance/run/' . $task)) ?>">
                     <?= csrf_field() ?>
                     <button class="btn btn-secondary btn-sm" type="submit"><?= icon($iconName, 14) ?> <?= e($label) ?></button>
                 </form>

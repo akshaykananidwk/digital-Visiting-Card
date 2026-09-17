@@ -8,7 +8,7 @@
 
     <div class="grid grid-2" style="align-items:start">
         <div class="card"><div class="card-body">
-            <form method="post" action="<?= e(url('contact')) ?>">
+            <form method="post" action="<?= e(url_path('contact')) ?>">
                 <?= csrf_field() ?>
                 <div style="position:absolute;left:-9999px" aria-hidden="true">
                     <input type="text" name="website_url" tabindex="-1" autocomplete="off">

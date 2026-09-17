@@ -7,7 +7,7 @@ $config = is_array($template['config'] ?? null) ? $template['config'] : $default
 $palette = array_merge($defaults['palette'], (array) ($config['palette'] ?? []));
 $fontsUsed = array_merge($defaults['fonts'], (array) ($config['fonts'] ?? []));
 $activeEffects = (array) ($config['effects'] ?? []);
-$action = $template === null ? url('admin/templates') : url('admin/templates/' . (int) $template['id']);
+$action = $template === null ? url_path('admin/templates') : url_path('admin/templates/' . (int) $template['id']);
 ?>
 <?php $__view->start('content'); ?>
 <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,320px);align-items:start">
@@ -207,7 +207,7 @@ $action = $template === null ? url('admin/templates') : url('admin/templates/' .
             <div class="card-header"><h3 style="font-size:.95rem">Preview</h3></div>
             <div class="card-body">
                 <?php if ($template !== null): ?>
-                    <div class="phone-frame"><iframe src="<?= e(url('templates/preview/' . $template['code'])) ?>" title="Preview"></iframe></div>
+                    <div class="phone-frame"><iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="Preview"></iframe></div>
                     <p class="tiny muted text-center mt-2">Save to see your changes.</p>
                 <?php else: ?>
                     <p class="small muted mb-0">Save the template to see a live preview.</p>

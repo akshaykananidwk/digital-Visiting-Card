@@ -190,7 +190,11 @@ button { font: inherit; cursor: pointer; }
 .dvc-product-name { font-weight: 700; font-size: .87rem; line-height: 1.32; }
 .dvc-product-price { font-weight: 800; color: var(--c-primary); font-size: .95rem; }
 .dvc-product-price del { color: var(--c-muted); font-weight: 500; font-size: .78rem; margin-left: 6px; }
-.dvc-product .dvc-btn { min-height: 38px; padding: 8px 12px; font-size: .78rem; margin-top: auto; }
+.dvc-product .dvc-btn { min-height: 44px; padding: 10px 12px; font-size: .78rem; margin-top: auto; }
+
+/* Secondary call-to-action inside a service card. Kept at the same 44px
+   thumb-friendly minimum as every other tappable control on the card. */
+.dvc-service-cta { min-height: 44px; font-size: .78rem; margin-top: 9px; padding: 10px 14px; }
 
 .dvc-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 9px; }
 .dvc-gallery a, .dvc-gallery button {

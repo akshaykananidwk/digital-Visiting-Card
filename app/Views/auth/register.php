@@ -3,7 +3,7 @@
     <h1 style="font-size:1.45rem;margin-bottom:4px">Create your account</h1>
     <p class="muted small mb-3">Your digital visiting card is ready in about 5 minutes.</p>
 
-    <form method="post" action="<?= e(url('register')) ?>">
+    <form method="post" action="<?= e(url_path('register')) ?>">
         <?= csrf_field() ?>
         <div class="field">
             <label class="required" for="name">Full name</label>

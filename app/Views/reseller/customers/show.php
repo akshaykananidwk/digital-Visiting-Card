@@ -55,7 +55,7 @@ $customerId = (int) $customer['id'];
     </div>
 
     <div class="stack">
-        <form method="post" action="<?= e(url('reseller/customers/' . $customerId . '/plan')) ?>" class="card"
+        <form method="post" action="<?= e(url_path('reseller/customers/' . $customerId . '/plan')) ?>" class="card"
               data-confirm="Activate this plan? Your reseller price will be deducted from your wallet.">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Plan</h3></div>
@@ -79,7 +79,7 @@ $customerId = (int) $customer['id'];
             </div>
         </form>
 
-        <form method="post" action="<?= e(url('reseller/customers/' . $customerId . '/status')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('reseller/customers/' . $customerId . '/status')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Status</h3></div>
             <div class="card-body">
@@ -94,7 +94,7 @@ $customerId = (int) $customer['id'];
             </div>
         </form>
 
-        <form method="post" action="<?= e(url('reseller/customers/' . $customerId . '/password')) ?>" class="card"
+        <form method="post" action="<?= e(url_path('reseller/customers/' . $customerId . '/password')) ?>" class="card"
               data-confirm="Reset this customer's password?">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Reset password</h3></div>

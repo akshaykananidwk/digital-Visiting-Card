@@ -4,7 +4,7 @@
         <h2 class="dvc-section-title"><?= icon('inbox', 15) ?> <?= e($title) ?></h2>
         <p style="margin:0 0 14px;font-size:.88rem;color:var(--c-muted)">Send a message and we will get back to you shortly.</p>
 
-        <form class="dvc-form" method="post" action="<?= e(url('card/' . $card->card()['slug'] . '/enquiry')) ?>" data-enquiry-form>
+        <form class="dvc-form" method="post" action="<?= e(url_path('card/' . $card->card()['slug'] . '/enquiry')) ?>" data-enquiry-form>
             <?= csrf_field() ?>
             <!-- Honeypot: real visitors never fill this in. -->
             <div style="position:absolute;left:-9999px" aria-hidden="true">

@@ -15,7 +15,7 @@ $query = array_filter(['q' => $filters['search'], 'active' => $filters['active']
     <div class="stat"><div class="stat-label">Total sales</div><div class="stat-value" style="font-size:1.35rem"><?= e(money((float) $stats['sales_total'])) ?></div></div>
 </div>
 
-<form method="get" action="<?= e(url('admin/resellers')) ?>" class="card mb-3">
+<form method="get" action="<?= e(url_path('admin/resellers')) ?>" class="card mb-3">
     <div class="card-body filter-bar">
         <div class="input-group flex-1" style="min-width:220px">
             <span class="addon"><?= icon('search', 16) ?></span>

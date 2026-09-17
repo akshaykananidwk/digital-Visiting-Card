@@ -4,7 +4,7 @@ $__view->extend('layouts.panel');
 ?>
 <?php $__view->start('content'); ?>
 <div class="container-sm" style="margin:0">
-    <form method="post" action="<?= e(url('cards')) ?>" class="card">
+    <form method="post" action="<?= e(url_path('cards')) ?>" class="card">
         <?= csrf_field() ?>
         <div class="card-header"><h2>Card details</h2></div>
         <div class="card-body">
@@ -97,7 +97,7 @@ $__view->extend('layouts.panel');
                     <?php foreach (array_slice($suggested, 0, 6) as $item): ?>
                         <a class="template-card" href="<?= e(url('cards/create?template=' . (int) $item['id'])) ?>">
                             <div class="template-thumb">
-                                <iframe src="<?= e(url('templates/preview/' . $item['code'])) ?>" title="<?= e((string) $item['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
+                                <iframe src="<?= e(url_path('templates/preview/' . $item['code'])) ?>" title="<?= e((string) $item['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
                             </div>
                             <div class="template-meta"><div class="name truncate"><?= e((string) $item['name']) ?></div></div>
                         </a>

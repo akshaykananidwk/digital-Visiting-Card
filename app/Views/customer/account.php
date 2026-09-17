@@ -2,7 +2,7 @@
 <?php $__view->start('content'); ?>
 <div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
     <div class="stack">
-        <form method="post" action="<?= e(url('account/profile')) ?>" enctype="multipart/form-data" class="card">
+        <form method="post" action="<?= e(url_path('account/profile')) ?>" enctype="multipart/form-data" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h2>Profile</h2></div>
             <div class="card-body">
@@ -60,7 +60,7 @@
             <div class="card-footer text-right"><button class="btn" type="submit"><?= icon('save', 16) ?> Save profile</button></div>
         </form>
 
-        <form method="post" action="<?= e(url('account/password')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('account/password')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h2>Password</h2></div>
             <div class="card-body">
@@ -87,7 +87,7 @@
             <div class="card-header"><h2 style="color:var(--danger)">Delete account</h2></div>
             <div class="card-body">
                 <p class="small muted">This permanently deletes your account, every card you created, your leads and your analytics. It cannot be undone.</p>
-                <form method="post" action="<?= e(url('account/delete')) ?>" data-confirm="Delete your account and all of your cards permanently?">
+                <form method="post" action="<?= e(url_path('account/delete')) ?>" data-confirm="Delete your account and all of your cards permanently?">
                     <?= csrf_field() ?>
                     <div class="grid grid-2" style="gap:0 12px">
                         <div class="field">
@@ -121,7 +121,7 @@
                 <strong><?= !empty($user['email_verified_at']) ? 'Yes' : 'No' ?></strong>
             </div>
             <?php if (empty($user['email_verified_at'])): ?>
-                <form method="post" action="<?= e(url('verify-email/resend')) ?>" class="mt-2">
+                <form method="post" action="<?= e(url_path('verify-email/resend')) ?>" class="mt-2">
                     <?= csrf_field() ?>
                     <button class="btn btn-secondary btn-sm btn-block" type="submit">Send verification email</button>
                 </form>

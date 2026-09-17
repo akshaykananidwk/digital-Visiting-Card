@@ -1,5 +1,5 @@
 <?php /** @var array<string,mixed>|null $plan */ $__view->extend('layouts.admin');
-$action = $plan === null ? url('admin/plans') : url('admin/plans/' . (int) $plan['id']);
+$action = $plan === null ? url_path('admin/plans') : url_path('admin/plans/' . (int) $plan['id']);
 $features = is_array($plan['features'] ?? null) ? implode("\n", $plan['features']) : '';
 $value = static fn (string $key, mixed $default = '') => e((string) ($plan[$key] ?? $default));
 ?>

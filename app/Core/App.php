@@ -326,33 +326,84 @@ final class App
 
     private function frameOption(): string
     {
-        // Template previews are intentionally embeddable inside the editor.
-        $path = $this->request->path();
-        if (str_starts_with($path, '/card/') || str_starts_with($path, '/templates/preview')) {
-            return 'SAMEORIGIN';
-        }
+        return $this->isEmbeddable() ? 'SAMEORIGIN' : 'DENY';
+    }
 
-        return 'DENY';
+    /**
+     * Template previews and public cards are intentionally embeddable inside
+     * the design gallery and the live editor, which render them in iframes:
+     * /templates/preview/{code}, /cards/{id}/preview and /editor/{id}/preview
+     * as well as the public card itself. Every other page refuses framing
+     * outright rather than relying on a same-origin exception.
+     */
+    private function isEmbeddable(): bool
+    {
+        $path = $this->request->path();
+
+        return str_starts_with($path, '/card/')
+            || str_starts_with($path, '/templates/preview')
+            || str_ends_with($path, '/preview');
     }
 
     private function contentSecurityPolicy(): string
     {
+        // Assets and form actions are generated from APP_URL. When visitors
+        // reach the site on a host that is not byte-identical to APP_URL
+        // (www vs non-www, an alias domain, a reseller's white-label domain)
+        // those URLs are cross-origin, and a bare 'self' policy would block
+        // the site's own stylesheets, scripts and form submissions. The
+        // configured origin is therefore always allowed alongside 'self'.
+        $own = trim("'self' " . $this->configuredOrigin());
+
         $directives = [
-            "default-src 'self'",
+            "default-src {$own}",
             "base-uri 'self'",
-            "form-action 'self' https://api.razorpay.com",
-            "frame-ancestors 'self'",
+            "form-action {$own} https://api.razorpay.com",
+            // The gallery and editor frame these pages using APP_URL-derived
+            // src attributes, so the configured origin has to be an allowed
+            // ancestor as well -- otherwise every preview breaks the moment
+            // the site is browsed on a host APP_URL does not name verbatim.
+            'frame-ancestors ' . ($this->isEmbeddable() ? $own : "'none'"),
             "object-src 'none'",
-            "img-src 'self' data: blob: https:",
-            "font-src 'self' data: https://fonts.gstatic.com",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
-            "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://cdn.jsdelivr.net",
-            "connect-src 'self' https://lumberjack.razorpay.com https://api.razorpay.com",
-            "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com",
-            "media-src 'self' https:",
-            'upgrade-insecure-requests',
+            "img-src {$own} data: blob: https:",
+            "font-src {$own} data: https://fonts.gstatic.com",
+            "style-src {$own} 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+            "script-src {$own} 'unsafe-inline' https://checkout.razorpay.com https://cdn.jsdelivr.net",
+            "connect-src {$own} https://lumberjack.razorpay.com https://api.razorpay.com",
+            "frame-src {$own} https://api.razorpay.com https://checkout.razorpay.com https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com",
+            "media-src {$own} https:",
         ];
 
+        if ($this->request->isSecure()) {
+            $directives[] = 'upgrade-insecure-requests';
+        }
+
         return implode('; ', $directives);
+    }
+
+    /**
+     * Scheme + host of APP_URL, when it differs from the host being browsed.
+     * Returns an empty string when they match, so the policy stays minimal.
+     */
+    private function configuredOrigin(): string
+    {
+        $configured = (string) Config::get('app.url', '');
+        if ($configured === '') {
+            return '';
+        }
+
+        $parts = parse_url($configured);
+        $host = (string) ($parts['host'] ?? '');
+        if ($host === '') {
+            return '';
+        }
+
+        $scheme = (string) ($parts['scheme'] ?? ($this->request->isSecure() ? 'https' : 'http'));
+        $port = isset($parts['port']) ? ':' . (int) $parts['port'] : '';
+        $origin = $scheme . '://' . $host . $port;
+
+        $current = ($this->request->isSecure() ? 'https' : 'http') . '://' . $this->request->host();
+
+        return $origin === $current ? '' : $origin;
     }
 }

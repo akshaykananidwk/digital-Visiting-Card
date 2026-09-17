@@ -59,7 +59,7 @@ $cardId = (int) $card['id'];
                                 ])) ?>'>
                             <?= icon('edit', 14) ?> Edit
                         </button>
-                        <form method="post" action="<?= e(url('cards/' . $cardId . '/products/' . (int) $product['id'] . '/delete')) ?>" data-confirm="Remove this product?">
+                        <form method="post" action="<?= e(url_path('cards/' . $cardId . '/products/' . (int) $product['id'] . '/delete')) ?>" data-confirm="Remove this product?">
                             <?= csrf_field() ?>
                             <button class="btn btn-sm btn-ghost" type="submit"><?= icon('trash', 14) ?></button>
                         </form>
@@ -72,7 +72,7 @@ $cardId = (int) $card['id'];
 
 <div class="modal-backdrop" id="product-modal">
     <div class="modal" role="dialog" aria-label="Product">
-        <form method="post" enctype="multipart/form-data" action="<?= e(url('cards/' . $cardId . '/products')) ?>">
+        <form method="post" enctype="multipart/form-data" action="<?= e(url_path('cards/' . $cardId . '/products')) ?>">
             <?= csrf_field() ?>
             <div class="modal-head"><h3>Product</h3><button class="btn btn-ghost btn-icon" type="button" data-modal-close><?= icon('x', 18) ?></button></div>
             <div class="modal-body">

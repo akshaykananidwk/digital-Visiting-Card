@@ -11,7 +11,7 @@ $query = array_filter(['q' => $filters['search'], 'status' => $filters['status']
     <?php endforeach; ?>
 </div>
 
-<form method="get" action="<?= e(url('admin/cards')) ?>" class="card mb-3">
+<form method="get" action="<?= e(url_path('admin/cards')) ?>" class="card mb-3">
     <div class="card-body filter-bar">
         <div class="input-group flex-1" style="min-width:220px">
             <span class="addon"><?= icon('search', 16) ?></span>
@@ -50,7 +50,7 @@ $query = array_filter(['q' => $filters['search'], 'status' => $filters['status']
                         <td class="small"><?= number_format((int) $card['views_count']) ?></td>
                         <td class="small"><?= number_format((int) $card['leads_count']) ?></td>
                         <td class="nowrap">
-                            <form method="post" action="<?= e(url('admin/cards/' . (int) $card['id'] . '/status')) ?>" style="display:inline-flex;gap:6px">
+                            <form method="post" action="<?= e(url_path('admin/cards/' . (int) $card['id'] . '/status')) ?>" style="display:inline-flex;gap:6px">
                                 <?= csrf_field() ?>
                                 <select name="status" style="min-height:34px;font-size:.78rem;width:auto">
                                     <?php foreach (['published', 'draft', 'suspended', 'expired'] as $value): ?>
@@ -59,7 +59,7 @@ $query = array_filter(['q' => $filters['search'], 'status' => $filters['status']
                                 </select>
                                 <button class="btn btn-sm btn-secondary" type="submit">Set</button>
                             </form>
-                            <form method="post" action="<?= e(url('admin/cards/' . (int) $card['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this card?">
+                            <form method="post" action="<?= e(url_path('admin/cards/' . (int) $card['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this card?">
                                 <?= csrf_field() ?>
                                 <button class="btn btn-sm btn-ghost" type="submit"><?= icon('trash', 14) ?></button>
                             </form>

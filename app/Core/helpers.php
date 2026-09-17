@@ -45,6 +45,14 @@ if (!function_exists('url')) {
     }
 }
 
+if (!function_exists('url_path')) {
+    /** Root-relative URL -- use for iframes so the frame stays same-origin. */
+    function url_path(string $path = ''): string
+    {
+        return Url::relative($path);
+    }
+}
+
 if (!function_exists('asset')) {
     function asset(string $path): string
     {

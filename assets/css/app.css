@@ -162,7 +162,7 @@ pre { background: var(--surface-2); padding: 14px; border-radius: var(--radius-s
 .btn:active { transform: translateY(0); }
 .btn:disabled, .btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
 .btn-lg { padding: 14px 26px; font-size: 1rem; min-height: 52px; border-radius: 12px; }
-.btn-sm { padding: 7px 12px; font-size: .8rem; min-height: 36px; border-radius: 8px; }
+.btn-sm { padding: 8px 12px; font-size: .8rem; min-height: 40px; border-radius: 8px; }
 .btn-block { width: 100%; }
 .btn-secondary { --btn-bg: var(--surface); --btn-fg: var(--text); border-color: var(--border-strong); }
 .btn-ghost { --btn-bg: transparent; --btn-fg: var(--text); }
@@ -567,4 +567,15 @@ table.table tbody tr:last-child td { border-bottom: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+
+/* Touch targets --------------------------------------------------------
+   Pointer-coarse devices get the full 44px WCAG target size on every
+   control, including the compact ones that stay dense with a mouse. The
+   panels are used from a phone as often as the public card is. */
+@media (pointer: coarse) {
+  .btn-sm { min-height: 44px; padding: 10px 14px; }
+  .impersonation-bar .btn { min-height: 44px; padding: 10px 14px; }
+  .btn, .form-control, .input, select, textarea { min-height: 44px; }
 }

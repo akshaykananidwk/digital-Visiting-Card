@@ -120,7 +120,7 @@ $files = is_array($log['files_list'] ?? null) ? $log['files_list'] : [];
             </div>
 
             <?php if (auth()->isSuperAdmin() && (string) $log['status'] !== 'rolled_back'): ?>
-                <form method="post" action="<?= e(url('admin/updates/rollback')) ?>" class="card" style="border-color:var(--warning)"
+                <form method="post" action="<?= e(url_path('admin/updates/rollback')) ?>" class="card" style="border-color:var(--warning)"
                       data-confirm="Roll back to the pre-update backup? Current files and database will be replaced.">
                     <?= csrf_field() ?>
                     <input type="hidden" name="log_id" value="<?= (int) $log['id'] ?>">

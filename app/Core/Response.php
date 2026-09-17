@@ -37,7 +37,7 @@ final class Response
 
     public static function redirect(string $url, int $status = 302): self
     {
-        return new self('', $status, ['Location' => $url]);
+        return new self('', $status, ['Location' => Url::sameOrigin($url)]);
     }
 
     public static function download(string $content, string $filename, string $mime = 'application/octet-stream'): self

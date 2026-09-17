@@ -3,7 +3,7 @@
     <h1 style="font-size:1.45rem;margin-bottom:4px">Choose a new password</h1>
     <p class="muted small mb-3">Resetting the password for <strong><?= e($email) ?></strong>.</p>
 
-    <form method="post" action="<?= e(url('reset-password')) ?>">
+    <form method="post" action="<?= e(url_path('reset-password')) ?>">
         <?= csrf_field() ?>
         <input type="hidden" name="token" value="<?= e($token) ?>">
         <div class="field">

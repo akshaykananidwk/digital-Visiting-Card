@@ -2,7 +2,7 @@
 <?php $__view->start('content'); ?>
     <p class="muted">Connect Razorpay so customers can buy plans. You can skip this now and configure it later from Admin → Settings.</p>
 
-    <form method="post" action="<?= e(url('install/payment')) ?>">
+    <form method="post" action="<?= e(url_path('install/payment')) ?>">
         <?= csrf_field() ?>
 
         <label class="switch mb-3">

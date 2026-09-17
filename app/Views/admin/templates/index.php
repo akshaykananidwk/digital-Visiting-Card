@@ -23,7 +23,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
             <strong class="small">Bulk generator</strong>
             <div class="tiny muted">Build designs from the built-in design-token catalogue across <?= (int) $catalogue ?> industry categories. Existing codes are skipped.</div>
         </div>
-        <form method="post" action="<?= e(url('admin/templates/generate')) ?>" class="row" style="gap:8px"
+        <form method="post" action="<?= e(url_path('admin/templates/generate')) ?>" class="row" style="gap:8px"
               data-confirm="Generate designs now? On a slow shared host this can take a minute.">
             <?= csrf_field() ?>
             <input class="input" type="number" name="per_category" value="24" min="1" max="80" style="max-width:110px" aria-label="Designs per category">
@@ -32,7 +32,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
     </div>
 </div>
 
-<form method="get" action="<?= e(url('admin/templates')) ?>" class="card mb-3">
+<form method="get" action="<?= e(url_path('admin/templates')) ?>" class="card mb-3">
     <div class="card-body filter-bar">
         <div class="input-group flex-1" style="min-width:200px">
             <span class="addon"><?= icon('search', 16) ?></span>
@@ -72,19 +72,19 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
                     <?php if ((int) $template['is_premium'] === 1): ?><span class="badge badge-warning">Premium</span><?php endif; ?>
                     <?php if ((int) $template['is_active'] === 0): ?><span class="badge badge-danger">Off</span><?php endif; ?>
                 </div>
-                <iframe src="<?= e(url('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
+                <iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
             </div>
             <div class="template-meta">
                 <div class="name truncate"><?= e((string) $template['name']) ?></div>
                 <div class="tiny muted mb-1"><?= e((string) $template['code']) ?> · <?= (int) $template['usage_count'] ?> uses</div>
                 <div class="row" style="gap:4px">
                     <a class="btn btn-sm btn-secondary flex-1" href="<?= e(url('admin/templates/' . (int) $template['id'] . '/edit')) ?>"><?= icon('edit', 13) ?></a>
-                    <form method="post" action="<?= e(url('admin/templates/' . (int) $template['id'] . '/toggle')) ?>" style="flex:1">
+                    <form method="post" action="<?= e(url_path('admin/templates/' . (int) $template['id'] . '/toggle')) ?>" style="flex:1">
                         <?= csrf_field() ?>
                         <input type="hidden" name="field" value="is_active">
                         <button class="btn btn-sm btn-secondary btn-block" type="submit" title="Toggle active"><?= icon((int) $template['is_active'] === 1 ? 'eye' : 'x', 13) ?></button>
                     </form>
-                    <form method="post" action="<?= e(url('admin/templates/' . (int) $template['id'] . '/duplicate')) ?>" style="flex:1">
+                    <form method="post" action="<?= e(url_path('admin/templates/' . (int) $template['id'] . '/duplicate')) ?>" style="flex:1">
                         <?= csrf_field() ?>
                         <button class="btn btn-sm btn-secondary btn-block" type="submit" title="Duplicate"><?= icon('copy', 13) ?></button>
                     </form>

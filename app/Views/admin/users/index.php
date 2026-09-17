@@ -18,7 +18,7 @@ $query = array_filter(['q' => $filters['search'], 'role' => $filters['role'], 's
     <?php endforeach; ?>
 </div>
 
-<form method="get" action="<?= e(url('admin/users')) ?>" class="card mb-3">
+<form method="get" action="<?= e(url_path('admin/users')) ?>" class="card mb-3">
     <div class="card-body filter-bar">
         <div class="input-group flex-1" style="min-width:220px">
             <span class="addon"><?= icon('search', 16) ?></span>

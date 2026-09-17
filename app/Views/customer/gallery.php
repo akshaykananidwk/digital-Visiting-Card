@@ -33,7 +33,7 @@ $cardId = (int) $card['id'];
         </div>
         <div class="card-body">
             <?php if ($imageLimit['allowed']): ?>
-                <form method="post" action="<?= e(url('cards/' . $cardId . '/gallery')) ?>" enctype="multipart/form-data">
+                <form method="post" action="<?= e(url_path('cards/' . $cardId . '/gallery')) ?>" enctype="multipart/form-data">
                     <?= csrf_field() ?>
                     <label class="upload-zone" for="gallery-files">
                         <?= icon('upload', 26) ?>
@@ -55,7 +55,7 @@ $cardId = (int) $card['id'];
         </div>
         <div class="card-body">
             <?php if ($videoLimit['allowed']): ?>
-                <form method="post" action="<?= e(url('cards/' . $cardId . '/gallery/video')) ?>">
+                <form method="post" action="<?= e(url_path('cards/' . $cardId . '/gallery/video')) ?>">
                     <?= csrf_field() ?>
                     <div class="field">
                         <label for="video-url">YouTube link</label>
@@ -102,7 +102,7 @@ $cardId = (int) $card['id'];
                                 <span style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);color:#fff"><?= icon('play', 24) ?></span>
                             <?php endif; ?>
                         </div>
-                        <form method="post" action="<?= e(url('cards/' . $cardId . '/gallery/' . (int) $item['id'] . '/delete')) ?>" data-confirm="Remove this item?" class="mt-1">
+                        <form method="post" action="<?= e(url_path('cards/' . $cardId . '/gallery/' . (int) $item['id'] . '/delete')) ?>" data-confirm="Remove this item?" class="mt-1">
                             <?= csrf_field() ?>
                             <button class="btn btn-ghost btn-sm btn-block" type="submit"><?= icon('trash', 13) ?> Remove</button>
                         </form>

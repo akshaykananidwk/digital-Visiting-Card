@@ -6,7 +6,7 @@
         <div>Wallet balance: <strong><?= e(money($balance)) ?></strong>. Activating a paid plan deducts your reseller price from this balance.</div>
     </div>
 
-    <form method="post" action="<?= e(url('reseller/customers')) ?>" class="card">
+    <form method="post" action="<?= e(url_path('reseller/customers')) ?>" class="card">
         <?= csrf_field() ?>
         <div class="card-header"><h2>New customer</h2></div>
         <div class="card-body">

@@ -22,7 +22,7 @@ $query = array_filter([
         <p class="lead" style="margin-inline:auto">Every design is fully responsive and works with your content — switch any time without losing data.</p>
     </div>
 
-    <form method="get" action="<?= e(url('templates')) ?>" class="card mb-3">
+    <form method="get" action="<?= e(url_path('templates')) ?>" class="card mb-3">
         <div class="card-body">
             <div class="filter-bar">
                 <div class="input-group flex-1" style="min-width:230px">
@@ -101,7 +101,7 @@ $query = array_filter([
                         <div class="template-badges">
                             <?php if ((int) $template['is_premium'] === 1): ?><span class="badge badge-warning">Premium</span><?php else: ?><span class="badge badge-success">Free</span><?php endif; ?>
                         </div>
-                        <iframe src="<?= e(url('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
+                        <iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
                     </div>
                     <div class="template-meta">
                         <div class="name truncate"><?= e((string) $template['name']) ?></div>

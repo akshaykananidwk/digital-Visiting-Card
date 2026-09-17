@@ -7,7 +7,7 @@ $query = array_filter(['q' => $filters['search'], 'status' => $filters['status']
 <?php $__view->stop(); ?>
 
 <?php $__view->start('content'); ?>
-<form method="get" action="<?= e(url('reseller/customers')) ?>" class="card mb-3">
+<form method="get" action="<?= e(url_path('reseller/customers')) ?>" class="card mb-3">
     <div class="card-body filter-bar">
         <div class="input-group flex-1" style="min-width:220px">
             <span class="addon"><?= icon('search', 16) ?></span>

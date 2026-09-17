@@ -2,7 +2,7 @@
 $__view->extend('layouts.panel'); ?>
 <?php $__view->start('content'); ?>
 <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,380px);align-items:start">
-    <form method="post" action="<?= e(url('reseller/branding')) ?>" enctype="multipart/form-data" class="card">
+    <form method="post" action="<?= e(url_path('reseller/branding')) ?>" enctype="multipart/form-data" class="card">
         <?= csrf_field() ?>
         <div class="card-header"><h2>Your brand</h2></div>
         <div class="card-body">
@@ -44,7 +44,7 @@ $__view->extend('layouts.panel'); ?>
     </form>
 
     <div class="stack">
-        <form method="post" action="<?= e(url('reseller/branding/domain')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('reseller/branding/domain')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header">
                 <h3 style="font-size:.98rem">Custom domain</h3>
@@ -81,7 +81,7 @@ Value: <?= e($targetHost) ?></pre>
 Host:  _dvc-verify
 Value: <?= e((string) $reseller['domain_token']) ?></pre>
 
-                    <form method="post" action="<?= e(url('reseller/branding/domain/verify')) ?>" class="mt-2">
+                    <form method="post" action="<?= e(url_path('reseller/branding/domain/verify')) ?>" class="mt-2">
                         <?= csrf_field() ?>
                         <button class="btn btn-sm btn-block" type="submit"><?= icon('shield', 14) ?> Verify domain</button>
                     </form>

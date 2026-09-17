@@ -23,13 +23,13 @@
                             <div class="dvc-service-price"><?= e((string) ($service['price_label'] ?: 'From')) ?> <?= e(money((float) $service['price'])) ?></div>
                         <?php endif; ?>
                         <?php if (!empty($service['cta_link'])): ?>
-                            <a class="dvc-btn ghost" style="min-height:36px;font-size:.78rem;margin-top:9px;padding:6px 14px"
+                            <a class="dvc-btn ghost dvc-service-cta"
                                href="<?= e((string) $service['cta_link']) ?>" target="_blank" rel="noopener"
                                data-track="service_click" data-track-label="<?= e((string) $service['title']) ?>">
                                 <?= e((string) ($service['cta_label'] ?: 'Learn more')) ?>
                             </a>
                         <?php elseif ($card->whatsappLink() !== null): ?>
-                            <a class="dvc-btn ghost" style="min-height:36px;font-size:.78rem;margin-top:9px;padding:6px 14px"
+                            <a class="dvc-btn ghost dvc-service-cta"
                                href="<?= e((string) $card->whatsappLink('Hello, I am interested in: ' . (string) $service['title'])) ?>"
                                target="_blank" rel="noopener"
                                data-track="service_click" data-track-label="<?= e((string) $service['title']) ?>">

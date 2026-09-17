@@ -84,7 +84,7 @@
         <div class="row" style="gap:10px">
             <a class="btn btn-secondary" href="<?= e(url('admin/updates')) ?>">Back</a>
             <?php if ($result['available'] && auth()->isSuperAdmin()): ?>
-                <form method="post" action="<?= e(url('admin/updates/run')) ?>" class="row" style="gap:8px"
+                <form method="post" action="<?= e(url_path('admin/updates/run')) ?>" class="row" style="gap:8px"
                       data-confirm="Install this update now?">
                     <?= csrf_field() ?>
                     <input class="input" type="text" name="confirm" placeholder="Type UPDATE" required style="max-width:180px">

@@ -2,7 +2,7 @@
 <?php $__view->start('content'); ?>
     <p class="muted">Enter the MySQL details from your hosting control panel. If the database does not exist yet we will try to create it.</p>
 
-    <form method="post" action="<?= e(url('install/database')) ?>" id="db-form">
+    <form method="post" action="<?= e(url_path('install/database')) ?>" id="db-form">
         <?= csrf_field() ?>
 
         <div class="grid grid-2" style="gap:0 16px">

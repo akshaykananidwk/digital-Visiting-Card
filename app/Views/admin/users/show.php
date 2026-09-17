@@ -8,7 +8,7 @@ $userId = (int) $user['id'];
 ?>
 <?php $__view->start('topbar'); ?>
 <?php if ($canManage && auth()->can('admin.impersonate') && (string) $user['role'] === 'customer'): ?>
-    <form method="post" action="<?= e(url('admin/users/' . $userId . '/impersonate')) ?>" data-confirm="Sign in as this customer? This action is recorded in the audit trail.">
+    <form method="post" action="<?= e(url_path('admin/users/' . $userId . '/impersonate')) ?>" data-confirm="Sign in as this customer? This action is recorded in the audit trail.">
         <?= csrf_field() ?>
         <button class="btn btn-sm btn-secondary" type="submit"><?= icon('key', 15) ?> Login as user</button>
     </form>
@@ -22,7 +22,7 @@ $userId = (int) $user['id'];
 
 <div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
     <div class="stack">
-        <form method="post" action="<?= e(url('admin/users/' . $userId)) ?>" class="card">
+        <form method="post" action="<?= e(url_path('admin/users/' . $userId)) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h2>Account</h2>
                 <span class="badge <?= (string) $user['status'] === 'active' ? 'badge-success' : 'badge-danger' ?>"><?= e((string) $user['status']) ?></span>
@@ -121,7 +121,7 @@ $userId = (int) $user['id'];
                 <?php endif; ?>
 
                 <?php if ($canManage): ?>
-                    <form method="post" action="<?= e(url('admin/users/' . $userId . '/plan')) ?>" class="mb-2">
+                    <form method="post" action="<?= e(url_path('admin/users/' . $userId . '/plan')) ?>" class="mb-2">
                         <?= csrf_field() ?>
                         <div class="field">
                             <label class="tiny" for="plan_id">Assign a plan</label>
@@ -136,7 +136,7 @@ $userId = (int) $user['id'];
                         <button class="btn btn-sm btn-block" type="submit">Assign plan</button>
                     </form>
 
-                    <form method="post" action="<?= e(url('admin/users/' . $userId . '/extend')) ?>">
+                    <form method="post" action="<?= e(url_path('admin/users/' . $userId . '/extend')) ?>">
                         <?= csrf_field() ?>
                         <div class="row" style="gap:6px">
                             <input class="input" type="number" name="days" value="30" min="1" max="3650" style="max-width:100px">
@@ -148,7 +148,7 @@ $userId = (int) $user['id'];
         </div>
 
         <?php if ($canManage): ?>
-            <form method="post" action="<?= e(url('admin/users/' . $userId . '/status')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('admin/users/' . $userId . '/status')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-header"><h3 style="font-size:.98rem">Status</h3></div>
                 <div class="card-body">
@@ -164,7 +164,7 @@ $userId = (int) $user['id'];
                 </div>
             </form>
 
-            <form method="post" action="<?= e(url('admin/users/' . $userId . '/password')) ?>" class="card" data-confirm="Reset this user's password?">
+            <form method="post" action="<?= e(url_path('admin/users/' . $userId . '/password')) ?>" class="card" data-confirm="Reset this user's password?">
                 <?= csrf_field() ?>
                 <div class="card-header"><h3 style="font-size:.98rem">Reset password</h3></div>
                 <div class="card-body">
@@ -177,7 +177,7 @@ $userId = (int) $user['id'];
             </form>
 
             <?php if (auth()->isSuperAdmin()): ?>
-                <form method="post" action="<?= e(url('admin/users/' . $userId . '/delete')) ?>" class="card" style="border-color:var(--danger)"
+                <form method="post" action="<?= e(url_path('admin/users/' . $userId . '/delete')) ?>" class="card" style="border-color:var(--danger)"
                       data-confirm="Permanently delete this account and all of its data?">
                     <?= csrf_field() ?>
                     <div class="card-header"><h3 style="font-size:.98rem;color:var(--danger)">Delete account</h3></div>

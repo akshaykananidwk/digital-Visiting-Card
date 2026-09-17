@@ -6,7 +6,7 @@
         <div class="alert alert-info"><?= icon('info', 18) ?><div><?= (int) $existing ?> designs already exist. Running the generator again only adds the missing ones.</div></div>
     <?php endif; ?>
 
-    <form method="post" action="<?= e(url('install/designs')) ?>">
+    <form method="post" action="<?= e(url_path('install/designs')) ?>">
         <?= csrf_field() ?>
         <div class="field">
             <label for="per_category">Designs per category</label>

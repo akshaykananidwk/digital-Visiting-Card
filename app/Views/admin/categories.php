@@ -30,7 +30,7 @@
                                                 'description' => $child['description'], 'sort_order' => $child['sort_order'],
                                                 'is_active' => (int) $child['is_active'] === 1,
                                             ])) ?>'><?= icon('edit', 13) ?></button>
-                                    <form method="post" action="<?= e(url('admin/categories/' . (int) $child['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this category? Templates are kept but lose their category.">
+                                    <form method="post" action="<?= e(url_path('admin/categories/' . (int) $child['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this category? Templates are kept but lose their category.">
                                         <?= csrf_field() ?>
                                         <button class="btn btn-sm btn-ghost" type="submit"><?= icon('trash', 13) ?></button>
                                     </form>
@@ -49,7 +49,7 @@
 
 <div class="modal-backdrop" id="category-modal">
     <div class="modal" role="dialog" aria-label="Category">
-        <form method="post" action="<?= e(url('admin/categories')) ?>">
+        <form method="post" action="<?= e(url_path('admin/categories')) ?>">
             <?= csrf_field() ?>
             <div class="modal-head"><h3>Category</h3><button class="btn btn-ghost btn-icon" type="button" data-modal-close><?= icon('x', 18) ?></button></div>
             <div class="modal-body">

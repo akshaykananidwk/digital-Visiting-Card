@@ -28,7 +28,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
 
 <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,320px);align-items:start">
     <div>
-        <form method="get" action="<?= e(url('cards/' . $cardId . '/design')) ?>" class="card mb-3">
+        <form method="get" action="<?= e(url_path('cards/' . $cardId . '/design')) ?>" class="card mb-3">
             <div class="card-body">
                 <div class="filter-bar">
                     <div class="input-group flex-1" style="min-width:200px">
@@ -71,7 +71,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
                             <?php if ($isCurrent): ?><span class="badge badge-success">In use</span><?php endif; ?>
                             <?php if ((int) $template['is_premium'] === 1): ?><span class="badge badge-warning">Premium</span><?php endif; ?>
                         </div>
-                        <iframe src="<?= e(url('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
+                        <iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
                     </div>
                     <div class="template-meta">
                         <div class="name truncate"><?= e((string) $template['name']) ?></div>
@@ -81,7 +81,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
                         <?php elseif ($locked): ?>
                             <a class="btn btn-sm btn-block btn-secondary" href="<?= e(url('billing')) ?>"><?= icon('lock', 13) ?> Upgrade</a>
                         <?php else: ?>
-                            <form method="post" action="<?= e(url('cards/' . $cardId . '/design')) ?>">
+                            <form method="post" action="<?= e(url_path('cards/' . $cardId . '/design')) ?>">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="template_id" value="<?= (int) $template['id'] ?>">
                                 <button class="btn btn-sm btn-block" type="submit">Use this design</button>
@@ -100,7 +100,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
             <div class="card-header"><h3 style="font-size:.95rem">Preview</h3></div>
             <div class="card-body">
                 <div class="phone-frame">
-                    <iframe src="<?= e(url('cards/' . $cardId . '/preview')) ?>" title="Current design"></iframe>
+                    <iframe src="<?= e(url_path('cards/' . $cardId . '/preview')) ?>" title="Current design"></iframe>
                 </div>
                 <?php if ($current !== null): ?>
                     <p class="tiny muted text-center mt-2">Current: <?= e((string) $current['name']) ?></p>
@@ -108,7 +108,7 @@ $query = array_filter(['q' => $filters['search'], 'category' => $filters['catego
             </div>
         </div>
 
-        <form method="post" action="<?= e(url('cards/' . $cardId . '/design/theme')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('cards/' . $cardId . '/design/theme')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.95rem">Customise</h3></div>
             <div class="card-body">

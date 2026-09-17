@@ -1,6 +1,6 @@
 <?php /** @var array<int,array<string,mixed>> $plans @var array<int,array<string,mixed>> $resellers */ $__view->extend('layouts.admin'); ?>
 <?php $__view->start('content'); ?>
-<form method="post" action="<?= e(url('admin/users')) ?>" class="card" style="max-width:720px">
+<form method="post" action="<?= e(url_path('admin/users')) ?>" class="card" style="max-width:720px">
     <?= csrf_field() ?>
     <div class="card-header"><h2>New user</h2></div>
     <div class="card-body">

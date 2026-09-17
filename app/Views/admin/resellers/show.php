@@ -19,7 +19,7 @@ $resellerId = (int) $reseller['id'];
 
 <div class="grid" style="grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start">
     <div class="stack">
-        <form method="post" action="<?= e(url('admin/resellers/' . $resellerId)) ?>" class="card">
+        <form method="post" action="<?= e(url_path('admin/resellers/' . $resellerId)) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h2><?= e((string) $reseller['company_name']) ?></h2>
                 <span class="badge <?= (int) $reseller['is_active'] === 1 ? 'badge-success' : 'badge-danger' ?>"><?= (int) $reseller['is_active'] === 1 ? 'active' : 'inactive' ?></span>
@@ -92,7 +92,7 @@ $resellerId = (int) $reseller['id'];
     </div>
 
     <div class="stack">
-        <form method="post" action="<?= e(url('admin/resellers/' . $resellerId . '/wallet')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('admin/resellers/' . $resellerId . '/wallet')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Adjust wallet</h3></div>
             <div class="card-body">
@@ -119,7 +119,7 @@ $resellerId = (int) $reseller['id'];
         </div></div>
 
         <?php if (!empty($reseller['domain'])): ?>
-            <form method="post" action="<?= e(url('admin/resellers/' . $resellerId . '/domain')) ?>" class="card">
+            <form method="post" action="<?= e(url_path('admin/resellers/' . $resellerId . '/domain')) ?>" class="card">
                 <?= csrf_field() ?>
                 <div class="card-header"><h3 style="font-size:.98rem">White-label domain</h3></div>
                 <div class="card-body">

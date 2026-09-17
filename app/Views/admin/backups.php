@@ -16,7 +16,7 @@ $__view->extend('layouts.admin'); ?>
 <div class="card mb-3">
     <div class="card-header"><h2>Create a backup</h2></div>
     <div class="card-body">
-        <form method="post" action="<?= e(url('admin/backups')) ?>" class="row" style="gap:12px;align-items:flex-end;flex-wrap:wrap"
+        <form method="post" action="<?= e(url_path('admin/backups')) ?>" class="row" style="gap:12px;align-items:flex-end;flex-wrap:wrap"
               data-confirm="Create a backup now? On a large site this can take a minute.">
             <?= csrf_field() ?>
             <div class="field" style="margin:0;min-width:180px">
@@ -78,14 +78,14 @@ $__view->extend('layouts.admin'); ?>
                                     <?php if (!empty($backup['database_path'])): ?>
                                         <a class="btn btn-sm btn-ghost" title="Download SQL" href="<?= e(url('admin/backups/' . (int) $backup['id'] . '/download/database')) ?>"><?= icon('download', 13) ?> sql</a>
                                     <?php endif; ?>
-                                    <form method="post" action="<?= e(url('admin/backups/' . (int) $backup['id'] . '/verify')) ?>" style="display:inline">
+                                    <form method="post" action="<?= e(url_path('admin/backups/' . (int) $backup['id'] . '/verify')) ?>" style="display:inline">
                                         <?= csrf_field() ?>
                                         <button class="btn btn-sm btn-ghost" type="submit" title="Verify integrity"><?= icon('shield', 13) ?></button>
                                     </form>
                                     <button class="btn btn-sm btn-secondary" type="button" data-modal-open="restore-modal"
                                             data-modal-action="<?= e(url('admin/backups/' . (int) $backup['id'] . '/restore')) ?>"
                                             data-modal-fill='{"confirm":""}'><?= icon('refresh', 13) ?> Restore</button>
-                                    <form method="post" action="<?= e(url('admin/backups/' . (int) $backup['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this backup permanently?">
+                                    <form method="post" action="<?= e(url_path('admin/backups/' . (int) $backup['id'] . '/delete')) ?>" style="display:inline" data-confirm="Delete this backup permanently?">
                                         <?= csrf_field() ?>
                                         <button class="btn btn-sm btn-ghost" type="submit"><?= icon('trash', 13) ?></button>
                                     </form>

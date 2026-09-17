@@ -64,7 +64,7 @@ $cardId = (int) $card['id'];
                                 ])) ?>'>
                             <?= icon('edit', 14) ?> Edit
                         </button>
-                        <form method="post" action="<?= e(url('cards/' . $cardId . '/services/' . (int) $service['id'] . '/delete')) ?>" data-confirm="Remove this service?">
+                        <form method="post" action="<?= e(url_path('cards/' . $cardId . '/services/' . (int) $service['id'] . '/delete')) ?>" data-confirm="Remove this service?">
                             <?= csrf_field() ?>
                             <button class="btn btn-sm btn-ghost" type="submit"><?= icon('trash', 14) ?></button>
                         </form>
@@ -77,7 +77,7 @@ $cardId = (int) $card['id'];
 
 <div class="modal-backdrop" id="service-modal">
     <div class="modal" role="dialog" aria-label="Service">
-        <form method="post" enctype="multipart/form-data" action="<?= e(url('cards/' . $cardId . '/services')) ?>">
+        <form method="post" enctype="multipart/form-data" action="<?= e(url_path('cards/' . $cardId . '/services')) ?>">
             <?= csrf_field() ?>
             <div class="modal-head"><h3>Service</h3><button class="btn btn-ghost btn-icon" type="button" data-modal-close><?= icon('x', 18) ?></button></div>
             <div class="modal-body">

@@ -35,7 +35,7 @@ final class ErrorHandler
 
             // Deprecations must never take a production site down; they are
             // recorded so they can be fixed before the next PHP upgrade.
-            if (in_array($severity, [E_DEPRECATED, E_USER_DEPRECATED, E_STRICT], true)) {
+            if (in_array($severity, [E_DEPRECATED, E_USER_DEPRECATED], true)) {
                 Logger::log(Logger::NOTICE, sprintf('%s in %s:%d', $message, $file, $line), [], 'deprecations');
 
                 return true;

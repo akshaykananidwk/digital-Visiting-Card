@@ -44,7 +44,7 @@ $__view->extend('layouts.admin');
                         Connected to <strong><?= e($repo) ?></strong> on branch <strong><?= e($branch) ?></strong><?= $hasToken ? ' with an access token' : ' (public access)' ?>.
                     </p>
 
-                    <form method="post" action="<?= e(url('admin/updates/check')) ?>" class="mb-3">
+                    <form method="post" action="<?= e(url_path('admin/updates/check')) ?>" class="mb-3">
                         <?= csrf_field() ?>
                         <button class="btn" type="submit"><?= icon('refresh', 16) ?> Check for update</button>
                     </form>
@@ -65,7 +65,7 @@ $__view->extend('layouts.admin');
                         </div>
                     </div>
 
-                    <form method="post" action="<?= e(url('admin/updates/run')) ?>"
+                    <form method="post" action="<?= e(url_path('admin/updates/run')) ?>"
                           data-confirm="Install the update now? The site goes into maintenance mode for about a minute.">
                         <?= csrf_field() ?>
                         <div class="row" style="gap:8px">
@@ -111,7 +111,7 @@ $__view->extend('layouts.admin');
     </div>
 
     <div class="stack">
-        <form method="post" action="<?= e(url('admin/updates/settings')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('admin/updates/settings')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">GitHub repository</h3></div>
             <div class="card-body">
@@ -151,7 +151,7 @@ $__view->extend('layouts.admin');
             <div class="card-footer text-right"><button class="btn btn-sm" type="submit" <?= auth()->isSuperAdmin() ? '' : 'disabled' ?>>Save &amp; test</button></div>
         </form>
 
-        <form method="post" action="<?= e(url('admin/updates/maintenance')) ?>" class="card">
+        <form method="post" action="<?= e(url_path('admin/updates/maintenance')) ?>" class="card">
             <?= csrf_field() ?>
             <div class="card-header"><h3 style="font-size:.98rem">Maintenance mode</h3></div>
             <div class="card-body">

@@ -44,7 +44,7 @@ $__view->extend('layouts.public');
                 <?php $preview = $featured[0] ?? null; ?>
                 <div class="phone-frame">
                     <?php if ($preview !== null): ?>
-                        <iframe src="<?= e(url('templates/preview/' . $preview['code'])) ?>" title="Live card preview" loading="lazy"></iframe>
+                        <iframe src="<?= e(url_path('templates/preview/' . $preview['code'])) ?>" title="Live card preview" loading="lazy"></iframe>
                     <?php else: ?>
                         <div class="phone-screen" style="display:grid;place-items:center;color:#94a3b8">Preview</div>
                     <?php endif; ?>
@@ -95,7 +95,7 @@ $__view->extend('layouts.public');
                         <div class="template-badges">
                             <?php if ((int) $template['is_premium'] === 1): ?><span class="badge badge-warning">Premium</span><?php endif; ?>
                         </div>
-                        <iframe src="<?= e(url('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
+                        <iframe src="<?= e(url_path('templates/preview/' . $template['code'])) ?>" title="<?= e((string) $template['name']) ?>" loading="lazy" tabindex="-1" scrolling="no"></iframe>
                     </div>
                     <div class="template-meta">
                         <div class="name truncate"><?= e((string) $template['name']) ?></div>
