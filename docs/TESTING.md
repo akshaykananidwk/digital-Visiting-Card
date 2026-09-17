@@ -13,12 +13,28 @@ be re-run (`tests/run.sh`). Nothing here is a manual observation.
 | --- | --- |
 | Host and URL generation (`tests/host-urls.sh`) | 8 / 8 |
 | Security headers and access control (`tests/security-headers.sh`) | 18 / 18 |
+| Stored XSS on the public card (`tests/xss.php`) | 8 / 8 |
 | Payments (`tests/payments.php`) | 30 / 30 |
 | Webhooks (`tests/webhooks.php`) | 9 / 9 |
 | QR encoder (`tests/qr.php`) | 61 / 61 |
 | Responsive layout, 9 pages × 6 viewports (`tests/browser/responsive.js`) | 162 / 162 |
 | Preview framing (`tests/browser/framing.js`) | 24 / 24 |
 | Runtime health check (`php bin/console.php health`) | 12 / 12 |
+
+### Full-site sweep
+
+A separate pass drove the whole application rather than individual features:
+
+| Check | Result |
+| --- | --- |
+| Every GET route, as guest / customer / reseller / admin (416 requests) | 0 server errors |
+| PHP warnings, notices or exceptions logged during that crawl | 0 |
+| Every POST route submitted without a CSRF token (106 routes) | all 96 protected routes rejected; the 10 without CSRF are the locked installer, the signature-verified webhook, and the public tracking beacon |
+| Customer journey: register, create, edit, add service and product, publish, vCard, QR, ownership | 21 / 21 |
+| Admin and reseller journey: plans, users, settings, update check, audit log, panel isolation | 16 / 16 |
+| SQL injection across 17 search, filter, sort and pagination inputs (136 requests) | no errors, no leaks, no time-based delay, no data changed |
+| Upload hardening: PHP shell, spoofed content type, double extension, polyglot, appended PHP, SVG with script, oversize | only the genuine JPEG stored, renamed and re-encoded |
+| Browser sweep: 95 routes × 3 roles (285 page loads) | no JavaScript errors, no broken assets |
 
 Recorded during development, from suites driven against the same installation:
 customer journey 30/30, admin panel 32/32, reseller panel 18/18 (including
@@ -129,6 +145,43 @@ suite now fails if an authenticated page lands on `/login`.
 `$_SERVER['argv']` is an array and was being cast to string, so any CLI entry
 point that captured a request raised a fatal. Non-scalar server values are now
 skipped.
+
+### Stored XSS in the card's structured data (critical)
+
+The Schema.org JSON-LD block was written with a plain `json_encode`. An HTML
+parser does not understand JSON: the first literal `</script>` inside a script
+element ends it, whatever quoting the JSON uses. A card whose city, address or
+description contained `</script><script>...</script>` therefore executed
+attacker JavaScript on its own public page, which is served to every visitor
+and embedded in the admin and gallery previews.
+
+Confirmed by loading the card in a real browser and observing the injected
+script run. JSON destined for a script block now goes through a `json_script()`
+helper that escapes the tag, ampersand and quote characters to `\uXXXX`,
+leaving the JSON byte-identical once parsed but giving an HTML parser nothing
+to act on. `tests/xss.php` covers it and fails if the helper is bypassed.
+
+Every other field on the card was already escaped correctly, and a hostile
+theme colour is rejected by the palette validation rather than reaching the
+stylesheet.
+
+### Oversized uploads reported as a session error
+
+A POST larger than `post_max_size` arrives with its body discarded, so the CSRF
+token disappears with it and the visitor was told their session had expired.
+Someone uploading a large photo had no way to know the file was the problem.
+The CSRF middleware now recognises that case and returns 413 naming the actual
+limit.
+
+### Base path taken from an untrustworthy source
+
+The application's base path was derived from `SCRIPT_NAME` without checking it
+named the front controller. Where a server reports the request path instead,
+the session cookie was scoped to whatever directory the visitor happened to
+enter on -- so the session did not travel with them -- and a path segment was
+stripped from every route. `SCRIPT_NAME` is now used only when it names a PHP
+file; a sub-directory installation is configured through `APP_URL`, which is
+checked first.
 
 ## Known limitation
 

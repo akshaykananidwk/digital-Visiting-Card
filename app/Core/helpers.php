@@ -45,6 +45,27 @@ if (!function_exists('url')) {
     }
 }
 
+if (!function_exists('json_script')) {
+    /**
+     * JSON for embedding inside a <script> block.
+     *
+     * An HTML parser does not understand JSON: the first literal "</script>"
+     * inside the block ends it, whatever quoting the JSON uses. A card field
+     * containing "</script><script>...</script>" would therefore execute as
+     * script on the public card. Escaping the tag, ampersand and quote
+     * characters to \uXXXX keeps the JSON byte-for-byte equivalent once
+     * parsed while leaving nothing an HTML parser can act on.
+     */
+    function json_script(mixed $value): string
+    {
+        return (string) json_encode(
+            $value,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+                | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
+    }
+}
+
 if (!function_exists('url_path')) {
     /** Root-relative URL -- use for iframes so the frame stays same-origin. */
     function url_path(string $path = ''): string

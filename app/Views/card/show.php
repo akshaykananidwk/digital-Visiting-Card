@@ -48,7 +48,7 @@ $seoImage = $card->seoImage();
 <link rel="stylesheet" href="<?= e(asset('assets/css/card.css')) ?>">
 <style>:root{<?= $design->cssVariables() ?>}</style>
 
-<script type="application/ld+json"><?= json_encode($card->structuredData(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
+<script type="application/ld+json"><?= json_script($card->structuredData()) ?></script>
 </head>
 <body>
 <div class="<?= e($design->bodyClasses()) ?>"

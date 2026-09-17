@@ -40,6 +40,11 @@ class HttpException extends RuntimeException
         return new self(400, $message);
     }
 
+    public static function payloadTooLarge(string $message = ''): self
+    {
+        return new self(413, $message);
+    }
+
     public static function tokenMismatch(string $message = ''): self
     {
         return new self(419, $message);

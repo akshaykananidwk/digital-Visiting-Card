@@ -31,6 +31,7 @@ run() {
 
 run "Host and URL generation" bash tests/host-urls.sh
 run "Security headers"        bash tests/security-headers.sh
+run "Stored XSS"             php tests/xss.php
 run "Payments"                php tests/payments.php
 run "Webhooks"                php tests/webhooks.php
 run "QR encoder"              php tests/qr.php

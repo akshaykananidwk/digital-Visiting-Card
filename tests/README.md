@@ -36,6 +36,7 @@ falls back to structural assertions, and says so in its output.
 | --- | --- |
 | `host-urls.sh` | URL generation across hostnames: the configured host, its www/non-www counterpart, explicitly trusted aliases, and that an unrecognised `Host` header is never reflected into generated URLs |
 | `security-headers.sh` | CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, CSRF rejection, that protected files are not served, and installer lockout |
+| `xss.php` | Hostile values in every card field, checked against the parsed DOM: no event handler, `javascript:` URL or script body may carry them, the JSON-LD block must stay valid and terminate only at its own closing tag, and a hostile theme colour must not escape the style block |
 | `payments.php` | Order creation, signature verification, amount and order-id tampering, cross-account orders, failed payments, replay idempotency, invoice numbering and tax split. A stub replaces only the two methods that reach the network, so the real checkout, subscription and invoice code runs |
 | `webhooks.php` | Webhook signature verification and idempotent settlement, including replays |
 | `qr.php` | Encoding at every error-correction level, a sweep across symbol versions 1–40, and decoding each result back to the exact payload with an external scanner |

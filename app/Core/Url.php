@@ -27,8 +27,18 @@ final class Url
             }
         }
 
-        $script = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-        $dir = rtrim(str_replace('\\', '/', dirname($script)), '/');
+        // SCRIPT_NAME is only meaningful here when it names the front
+        // controller. Some server configurations report the request path
+        // instead, and taking dirname() of that would scope the session
+        // cookie to whatever directory the visitor happened to enter on and
+        // strip a real path segment off every route. A sub-directory install
+        // is configured through APP_URL above, which is checked first.
+        $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+        if (!str_ends_with(strtolower($script), '.php')) {
+            return self::$base = '';
+        }
+
+        $dir = rtrim(dirname($script), '/');
 
         return self::$base = ($dir === '/' ? '' : $dir);
     }
